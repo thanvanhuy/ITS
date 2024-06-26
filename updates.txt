@@ -1,0 +1,9 @@
+Website: http://vva.com.vn:88/
+1/ Thay WebChat bằng SignalR
+2/ Learn SignalR Server Broadcast: https://learn.microsoft.com/en-us/aspnet/signalr/overview/getting-started/tutorial-server-broadcast-with-signalr
+3/ Server broadcast with SignalR: https://www.twilio.com/blog/broadcasting-with-signalr-and-net-core
+4/ Enable Service Broker: https://community.netwitness.com/t5/netwitness-endpoint-4-x/sql-server-service-broker-for-the-current-database-is-not/ta-p/6192
+5/ Tạo Responsive cho các table
+6/ Hiển thị dữ liệu của lượt xe đầu tiên trong danh sách
+7/ Cần thêm log vào hệ thống
+8/ Tạo report trên ASP.NET Core: https://www.youtube.com/watch?v=QPYx53G3jhs&list=PL3UH9FCBOQiuzBdVHm44fQeS_yxYWfD7E

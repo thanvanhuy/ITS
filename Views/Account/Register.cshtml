@@ -1,0 +1,201 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using VVA.ITS.WebApp.ViewModels;
+@model UserViewModel;
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "VVA ITS - Đăng kí thành viên";
+}
+
+@section ExtraCSS{
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+    <style>
+        .input-validation-error {
+            border-color: red;
+        }
+    </style>
+}
+
+
+<form asp-action="Register" asp-asp-controller="Account" method="post" enctype="multipart/form-data">
+    <!-- Thông tin tài khoản -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-user"></i> Đăng ký người dùng</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="col-md-12 alert alert-danger">
+                            <span><b>Lỗi!</b> - @TempData["Error"]</span>
+                        </div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="fullName">Họ và tên</label>
+                        <input asp-for="fullName" type="text" class="form-control" placeholder="Nhập họ và tên người dùng">
+                        <span asp-validation-for="fullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="userName">Tên tài khoản<span class="required">(*)</span></label>
+                                <input asp-for="userName" type="text" class="form-control" placeholder="Tài khoản đăng nhập">
+                                <span asp-validation-for="userName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="email">Email<span class="required">(*)</span></label>
+                                <input asp-for="email" type="text" class="form-control" placeholder="Nhập địa chỉ Email" data-inputmask-alias="email" data-mask value="">
+                                <span asp-validation-for="email" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="password">Mật khẩu<span class="required">(*)</span> - Mặc định là <span class="required">Vva@123</span></label>
+                                <input asp-for="password" type="password" class="form-control" placeholder="Nhập mật khẩu" value="Vva@123">
+                                <span asp-validation-for="password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="confirmPassword">Xác nhận mật khẩu<span class="required">(*)</span></label>
+                                <input asp-for="confirmPassword" type="password" class="form-control" placeholder="Nhập lại mật khẩu" value="Vva@123">
+                                <span asp-validation-for="confirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="dateOfBirth">Ngày sinh</label>
+                                <div class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    </div>
+                                    <input asp-for="dateOfBirth" type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="gender">Giới tính</label>
+                                <select asp-for="gender" class="form-control">
+                                    <option value="true" Selected>Nam</option>
+                                    <option value="false">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="identityNumber">CMND/CCCD</label>
+                                <input asp-for="identityNumber" type="text" class="form-control" placeholder="Nhập số CMND/CCCD">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="phoneNumber">Số điện thoại</label>
+                                <input asp-for="phoneNumber" type="text" class="form-control" placeholder="Nhập số điện thoại">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="address">Địa chỉ</label>
+                                <input asp-for="address" type="text" class="form-control" placeholder="Nhập địa chỉ">
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="roleIDs">Vai trò</label>
+                                <div class="select2-blue">
+                                    <select asp-for="roleIDs" class="form-control select2" multiple="multiple" data-placeholder="Chọn vai trò người dùng" style="width: 100%;">
+                                        @{
+                                            if (Model.roles != null)
+                                            {
+                                                foreach (IdentityRole role in Model.roles)
+                                                {
+                                                    <option value="@role.Id">@role.Name</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <span asp-validation-for="roleIDs" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="profileImage">Ảnh đại diện</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input asp-for="profileImage" type="file" class="custom-file-input">
+                                        <label class="custom-file-label" asp-for="profileImage">Chọn hình</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group text-center">
+                                <img src="~/img/user1-128x128.jpg" id="previewImage" class="img-circle img-fluid" width="128px" height="128px" alt="Chân dung">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer text-right">                    
+                    <a class="btn btn-secondary" asp-action="Index" asp-controller="Account"><i class="fas fa-history"></i> Quay về</a>
+                    <a class="btn btn-success" id="btnReset"><i class="fas fa-undo"></i> Làm lại</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-check-square"></i> Đăng ký</button>
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!--/.col -->
+    </div>
+    <!--/.row -->
+</form>
+
+
+@section ExtraScripts{
+    <!-- Select2 -->
+    <script src="~/plugins/select2/js/select2.full.min.js"></script>
+    <!-- Moment -->
+    <script src="~/plugins/moment/moment.min.js"></script>
+    <!-- InputMask -->
+    <script src="~/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Page specific script -->
+    <script src="~/js/account/register.js"></script>
+}

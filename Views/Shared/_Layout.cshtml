@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    @await Html.PartialAsync("_CommonCSS")
+    @await RenderSectionAsync("ExtraCSS", required: false)
+</head>
+<body class="hold-transition sidebar-mini sidebar-collapse layout-fixed">
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        @await Html.PartialAsync("_Preloader")
+
+        <!-- Navbar -->
+        @await Html.PartialAsync("_Navbar")
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        @await Html.PartialAsync("_Sidebar")
+
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            @await RenderSectionAsync("ContentHeader", required: false)
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        @await Html.PartialAsync("_Footer")
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+    @await Html.PartialAsync("_CommonScript")
+    @await RenderSectionAsync("ExtraScripts", required: false)
+</body>
+</html>

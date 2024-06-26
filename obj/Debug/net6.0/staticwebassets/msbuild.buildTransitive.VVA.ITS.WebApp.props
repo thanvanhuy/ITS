@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\VVA.ITS.WebApp.props" />
+</Project>

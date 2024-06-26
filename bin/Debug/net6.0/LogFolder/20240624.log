@@ -1,0 +1,1 @@
+24-06-2024  11:31:23.873 VehicleTableDependency_OnError() - Error: SpeedCAM SqlTableDependency error: A transport-level error has occurred when receiving results from the server. (provider: Session Provider, error: 19 - Physical connection is not usable)

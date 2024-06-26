@@ -1,0 +1,189 @@
+﻿@model EditRoleViewModel
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "VVA ITS - Cập Nhật Phân Quyền";
+}
+
+@section ExtraCSS{
+	<!-- daterange picker -->
+	<link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+	<!-- Tempusdominus Bootstrap 4 -->
+	<link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+	<!-- Select2 -->
+	<link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+}
+
+<style>
+	.input-validation-error {
+		border-color: red;
+	}
+</style>
+
+<form asp-action="Update" asp-controller="Role" method="post">
+    <!-- Thông tin phân quyền -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-user-edit"></i> Cập nhật phân quyền</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="col-md-12 alert alert-danger">
+                            <span><b>Lỗi!</b> - @TempData["Error"]</span>
+                        </div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <input asp-for="roleID" type="hidden" value="@Model.role?.Id">
+                    <input asp-for="roleName" type="hidden" value="@Model.role?.Name">
+
+                    <div id="accordion">
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h4 class="card-title w-100">
+                                    <a class="d-block w-100" data-toggle="collapse" href="#collapseOne">
+                                        Quản lý người dùng thuộc phân quyền @Model.role?.Name
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Họ và tên</th>
+                                                <th>Tài khoản</th>
+                                                <th>Email</th>
+                                                <th style="text-align:center">Trạng thái</th>
+                                                <th style="text-align:center">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int order = 0;
+                                                if (Model.members != null && Model.members.Count() > 0)
+                                                {
+                                                    <tr>
+                                                        <td colspan="7" class="btn-secondary">Danh sách tài khoản có quyền @Model.role?.Name</td>
+                                                    </tr>
+
+                                                    foreach (AppUser user in Model.members)
+                                                    {
+                                                        <tr>
+                                                            <td>@(++order)</td>
+                                                            <input type="hidden" value="@user.Id">
+                                                            <td class="full-name">@user.fullName</td>
+                                                            <td class="user-name">@user.UserName</td>
+                                                            <td>@user.Email</td>
+                                                            <td style="text-align:center">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    @if (user.isActive)
+                                                                    {
+                                                                        <input class="custom-control-input activate-user-control" type="checkbox" value="true" checked disabled>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input class="custom-control-input activate-user-control" type="checkbox" value="false" disabled>
+                                                                    }
+                                                                    <label class="custom-control-label">Đã kích hoạt</label>
+                                                                </div>
+                                                            </td>
+                                                            <td style="text-align:center">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input id="@user.Id" value="@user.Id" name="deleteIDs" class="custom-control-input add-role-user-control" type="checkbox" checked>
+                                                                    <label for="@user.Id" class="custom-control-label">Thêm vào phân quyền</label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+
+                                                if (Model.nonMembers != null && Model.nonMembers.Count() > 0)
+                                                {
+                                                    <tr>
+                                                        <td colspan="7" class="btn-secondary">Danh sách tài khoản chưa có quyền @Model.role?.Name</td>
+                                                    </tr>
+
+                                                    foreach (AppUser user in Model.nonMembers)
+                                                    {
+                                                        <tr>
+                                                            <td>@(++order)</td>
+                                                            <input type="hidden" value="@user.Id">
+                                                            <td class="full-name">@user.fullName</td>
+                                                            <td class="user-name">@user.UserName</td>
+                                                            <td>@user.Email</td>
+                                                            <td style="text-align:center">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    @if (user.isActive)
+                                                                    {
+                                                                        <input class="custom-control-input activate-user-control" type="checkbox" value="true" checked disabled>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input class="custom-control-input activate-user-control" type="checkbox" value="false" disabled>
+                                                                    }
+                                                                    <label class="custom-control-label">Đã kích hoạt</label>
+                                                                </div>
+                                                            </td>
+                                                            <td style="text-align:center">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input id="@user.Id" value="@user.Id" name="addIDs" class="custom-control-input add-role-user-control" type="checkbox">
+                                                                    <label for="@user.Id" class="custom-control-label">Thêm vào phân quyền</label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+
+                                                if (order == 0)
+                                                {
+                                                    <tr>
+                                                        <td colspan="7" style="text-align:center">Chưa có tài khoản nào trong danh sách</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-danger">
+                            <div class="card-header">
+                                <h4 class="card-title w-100">
+                                    <a class="d-block w-100" data-toggle="collapse" href="#collapseTwo">
+                                        Quản lý chức năng thuộc phân quyền @Model.role?.Name
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p style="text-align:center">Chức năng đang phát triển</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer text-right">
+                    <a class="btn btn-sm btn-secondary" asp-action="Index" asp-controller="Role"><i class="fas fa-undo-alt"></i> Quay lại</a>
+                    <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-download"></i> Cập nhật</button>
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!--/.col -->
+    </div>
+    <!--/.row -->
+</form>
+
+@section ExtraScripts{
+	<!-- Page script -->
+	<script src="~/js/role/update.js"></script>
+}

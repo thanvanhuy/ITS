@@ -1,0 +1,2 @@
+11-06-2024  11:16:33.225 VehicleTableDependency_OnError() - Error: SpeedCAM SqlTableDependency error: The conversation handle "09E2377C-9D27-EF11-8807-AC1F6B70C67B" is not found.
+Invalid object name 'dbo.dbo_Speed_CAM_7241d0ae-d309-47df-9f2f-c9a4c83dc27f_Receiver'.

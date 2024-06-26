@@ -1,0 +1,22 @@
+18-04-2024  13:43:09.651 DashboardController.Index() - Error: Unable to cast object of type 'System.Int32' to type 'System.String'.
+18-04-2024  13:48:33.838 DashboardController.GetVehiclesByday()() - Error: Argument data type int is invalid for argument 1 of substring function.
+18-04-2024  13:59:38.300 DashboardController.GetVehicleDetailsById()() - Error: File  not found!
+18-04-2024  13:59:38.310 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418135809388.jpg not found!
+18-04-2024  14:03:22.416 DashboardController.GetVehicleDetailsById()() - Error: File  not found!
+18-04-2024  14:03:22.417 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418140157813.jpg not found!
+18-04-2024  14:04:46.688 DashboardController.GetVehicleDetailsById()() - Error: File  not found!
+18-04-2024  14:04:46.689 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418140336528.jpg not found!
+18-04-2024  14:04:48.810 DashboardController.GetVehicleDetailsById()() - Error: File  not found!
+18-04-2024  14:04:48.811 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418140336528.jpg not found!
+18-04-2024  14:06:31.457 DashboardController.GetVehicleDetailsById()() - Error: File  not found!
+18-04-2024  14:06:31.457 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418140515758.jpg not found!
+18-04-2024  16:13:53.386 DashboardController.GetVehicleDetailsById()() - Error: File  not found!
+18-04-2024  16:13:53.387 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418161158469.jpg not found!
+18-04-2024  16:15:50.239 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\evidence\20240418161233339.jpg not found!
+18-04-2024  16:15:50.240 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418161233339.jpg not found!
+18-04-2024  16:16:10.525 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\evidence\20240418161345499.jpg not found!
+18-04-2024  16:16:10.525 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418161345499.jpg not found!
+18-04-2024  16:16:30.570 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\evidence\20240418161354019.jpg not found!
+18-04-2024  16:16:30.571 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418161354019.jpg not found!
+18-04-2024  16:17:27.033 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\evidence\20240418161354019.jpg not found!
+18-04-2024  16:17:27.036 DashboardController.GetVehicleDetailsById()() - Error: File D:\VVAITS\IMGS\180424\vehicleimage\20240418161354019.jpg not found!

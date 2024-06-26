@@ -1,0 +1,2 @@
+29-06-2023  15:00:02.557 TableDependency_OnError() - Error: VehicleSqlTableDependency error: The conversation handle "93CE061E-5016-EE11-87EC-AC1F6B70C67B" is not found.
+Invalid object name 'dbo.dbo_vehicles_fd09a68d-927e-4f34-a0fc-e23b1867687b_Receiver'.

@@ -1,0 +1,70 @@
+﻿@using VVA.ITS.WebApp.ViewModels;
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "VVA ITS - Search";
+}
+<style>
+    .searchItem{
+        width:9%;
+    }
+
+    .searchItem input{
+        width:100%;
+    }
+
+    .searchItem p ,
+        .searchItem label {
+        font-size:13px;
+        font-weight:300;
+    }
+</style>
+
+<form class="container-fluid" style="display:flex; justify-content:space-between" >
+    <div class="searchItem">
+        <p>Làn xe</p>
+    <select name="lanes">
+        <option>Tất cả</option>
+    </select>
+    </div>
+
+    <div class="searchItem">
+        <p>Loại xe</p>
+        <select name="lanes">
+            <option>Tất cả</option>
+        </select>
+    </div>
+    <div class="searchItem">
+        <label for="frontLicense">Biển số trước</label>
+        <input type="text" name="frontLicense"/>
+    </div>
+    <div class="searchItem">
+        <label for="behindLicense">Biển số sau</label>
+        <input type="text" name="behindLicense" />
+    </div>
+    <div class="searchItem">
+        <label for="quantityAxis">số trục</label>
+        <input type="text" name="quantityAxis" />
+    </div>
+
+    <div class="searchItem">
+        <label for="atTime">Từ thời điểm</label>
+        <input type="date" name="atTime" />
+    </div>
+    <div class ="searchItem">
+        <label for="toTime">đến thời điểm</label>
+        <input type="date" name="toTime" />
+    </div>
+
+    <div class="searchItem">
+        <label for="overWeight">Tỉ lệ quá tải</label>
+        <input type="text" name="overWeight" />
+    </div>
+    <div class="searchItem">
+        <label for="stateWeight">Trạng thái quá cân</label>
+        <input type="text" name="stateWeight" />
+    </div>
+
+    <a class="searchItem" href="#">Xuất báo cáo</a>
+
+</form>

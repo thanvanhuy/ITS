@@ -1,0 +1,234 @@
+﻿@using VVA.ITS.WebApp.Services.Helps
+@model IEnumerable<DataXe>
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Cân xe";
+}
+
+<div class="search-panel">
+    <div class="search-panel-item">
+        <span><b>Loại xe</b></span>
+        <select id="type_can" class="form-control">
+            <option value="0">Tất cả</option>
+            <option value="1">Thân liền</option>
+            <option value="2">Container</option>
+        </select>
+    </div>
+    <div class="search-panel-item">
+        <span><b>Biển số</b></span>
+        <input class="form-control" id="PlateWeigh" type="text" value="">
+    </div>
+
+    <div class="search-panel-item">
+        <span><b>Loại vi phạm</b></span>
+        <select id="TypeViolation" class="form-control">
+            <option value="0">Tất cả</option>
+            <option value="1">Cầu đường</option>
+            <option value="2">Giấy phép</option>
+        </select>
+    </div>
+
+    <div class="search-panel-item">
+        <span><b>Từ thời điểm</b></span>
+        <input type="text" class="form-control datetimepicker" id="start" name="" value="@DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy HH:mm")" />
+    </div>
+
+    <div class="search-panel-item">
+        <span><b>Đến thời điểm</b></span>
+        <input type="text" class="form-control datetimepicker" id="end" name="" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm")" />
+    </div>
+    <div class="search-panel-item">
+        <span><b>Tỉ lệ vi phạm</b></span>
+        <select id="ViolationRatio" class="form-control">
+            <option value="0">Tất cả</option>
+            <option value="1">Dưới 10%</option>
+            <option value="2">Từ 10-<20%</option>
+            <option value="3">Từ 20-30%</option>
+            <option value="4">Trên 30%</option>
+        </select>
+    </div>
+    <div class="search-panel-item">
+        <span><b>Danh sách trạm cân</b></span>
+        <select id="" class="form-control">
+            <option value="0">Tất cả</option>
+            <option value="1">KM6-CT NBLC</option>
+           
+        </select>
+    </div>
+   
+    <div class="search-panel-item">
+        <span></span><br>
+        <button id="" class="btn btn-primary form-control" type="button" data-toggle="tooltip" title="Xuất báo cáo dữ liệu" data-placement="bottom">Xuất báo cáo</button>
+    </div>
+    <div class="search-panel-item">
+        <span></span><br>
+        <button id="seachweigh" class="btn btn-primary form-control" type="button" data-toggle="tooltip" title="Tìm kiếm" data-placement="bottom">Tìm kiếm</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                </div>
+            </div>
+            <div class="card-body table-responsive-lg">
+                <table id="listcanxe" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="vertical-align:top; text-align:center">Địa điểm</th>
+                            <th style="vertical-align:top; text-align:center">Thời gian</th>
+                            <th style="vertical-align:top; text-align:center">Biển số xe</th>
+                            <th style="vertical-align:top; text-align:center">Biển số rơ móc</th>
+                            <th style="vertical-align:top; text-align:center">Loại xe</th>
+                            <th style="vertical-align:top; text-align:center">Tốc độ qua cân</th>
+                            <th style="vertical-align:top; text-align:center">Tổng tải</th>
+                            <th style="vertical-align:top; text-align:center">Tải trọng theo GP</th>
+                            <th style="vertical-align:top; text-align:center">Tải trọng theo CĐ</th>
+                            <th style="vertical-align:top; text-align:center">% VPGP</th>
+                            <th style="vertical-align:top; text-align:center">% VPCD</th>
+                            <th style="vertical-align:top; text-align:center">Hình chuẩn</th>
+                            <th style="vertical-align:top; text-align:center">Mã đầu cân</th>
+                            <th style="vertical-align:top; text-align:center">Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(Model != null)
+                        {
+                            @foreach (var vehicle in Model)
+                            {
+                                var xe="";
+                                var hinhxe ="";
+                                try
+                                {
+                                    int check = int.Parse(@vehicle.Kieuxe);
+                                    hinhxe = clsHelps.getpathimage(check);
+                                    xe = check > 6 ? "Container" : "Xe thân liền";
+                                }
+                                catch (Exception)
+                                {
+                                    // dữ liệu test đag sai
+                                    xe = "Xe thân liền";
+                                    hinhxe = "/img/12.png";
+                                }
+                               
+                                <tr style="cursor:grab">
+                                    <td>KM6-CT NBLC</td>
+                                    <td>@vehicle.Thoigian.ToString("dd/MM/yy HH:mm:ss")</td>
+                                    <td>@vehicle.Biensotruoc</td>
+                                    <td>@vehicle.Biensosau</td>
+                                    <td>@xe</td>
+                                    <td>@vehicle.Tocdo</td>
+                                    <td>@vehicle.TTLtruc</td>
+                                    <td>@vehicle.TLgiayphep</td>
+                                    <td>@vehicle.TLtruc1</td>
+                                    <td>@vehicle.Quataitong</td>
+                                    <td>@vehicle.Quataitheogp</td>
+                                    <td><img class="img-fluid img-thumbnail" loading="lazy" src="@hinhxe" width="100" height="100"></td>
+                                    <td>001</td>
+                                    <td class="showweigh" data-id="@vehicle.Id">
+                                        <i class="fas fa-eye"></i>
+                                    </td>
+
+                                </tr>
+                            }
+                            @section ExtraScripts {
+                            <script src="~/js/dashboard/weigh.js"></script>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalWeighDetail">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!--Modal Header-->
+             <input type="text" hidden id="idcan" value="">
+            <div class="modal-header">
+                <h4 class="modal-title">Thông tin chi tiết xe đã cân</h4>
+                <button type="button" class="close required" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!--Modal Body-->
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label for="inputDatecan" class="col-sm-2 col-form-label">Ngày cân xe</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputDatecan" value="">
+                    </div>
+                    <label for="inputTimecan" class="col-sm-2 col-form-label">Giờ cân xe</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputTimecan" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPlatecan" class="col-sm-2 col-form-label">Biển số trước</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputPlatecan" value="">
+                    </div>
+                    <label for="inputPlatecan1" class="col-sm-2 col-form-label">Biển số sau</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputPlatecan1" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputSpeedcan" class="col-sm-2 col-form-label">Tốc độ qua cân</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputSpeedcan" value="">
+                    </div>
+                    <label for="inputDirectioncan" class="col-sm-2 col-form-label">Loại xe</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputDirectioncan" value="">
+                    </div>
+                </div>
+                <div class="form-group row text-center">
+                    <div class="col-sm-6">
+                        <label for="hinhtruoc" class="col-form-label">Hình trước</label>
+                        <div id="hinhtruoc">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="hinhsau" class="col-form-label">Hình sau</label>
+                        <div id="hinhsau">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row justify-content-center">
+                    <div class="col-sm-6 text-center">
+                        <label for="inputPlateImagecan">Hình chuẩn</label>
+                        <div id="inputPlateImage">
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label id="xx" class="col-form-label"></label>
+                            <label id="xx1" class="col-form-label"></label>
+                            <label id="xx2" class="col-form-label"></label>
+                        </div>
+                    </div> 
+                </div>
+                <div id="ketluan" class="form-group">
+                   
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-secondary" target="_blank" onclick="Createpdf()">In báo cáo xe</button>
+                        <button type="button" class="btn btn-secondary" onclick="checkFileCount()">Cập nhật hình</button>
+                    </div>
+                    <div class="col-6">
+                        <div class="custom-file mb-3">
+                            <input type="file" class="custom-file-input" id="file" name="pic" accept="image/*" multiple>
+                            <label class="custom-file-label" for="customFile">Chọn 2 hình</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

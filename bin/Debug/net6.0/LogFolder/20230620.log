@@ -1,0 +1,2 @@
+20-06-2023  20:41:18.319 [HttpPost] AccountController.AdvancedSearchUsers()() - Error: String '' was not recognized as a valid DateTime.
+20-06-2023  20:41:28.397 [HttpPost] AccountController.AdvancedSearchUsers()() - Error: String '' was not recognized as a valid DateTime.

@@ -1,0 +1,27 @@
+﻿.header {
+    display: flex;
+    justify-content: center;
+}
+
+.header div {
+    max-width: 50%; /* Đặt chiều rộng tối đa của mỗi phần tử con là 50% của phần tử cha */
+    text-align: center; /* Căn giữa nội dung của mỗi phần tử con */
+    display: inline-block; /* Hiển thị các phần tử con như các khối trong dòng liền kề */
+    vertical-align: top; /* Canh chỉnh các phần tử con theo đỉnh của phần tử cha */
+    white-space: nowrap; /* Ngăn các phần tử con bên trong bị ngắt dòng */
+    font-weight: bold; /* In đậm nội dung của mỗi phần tử con */
+    margin-left:90px; /* Xóa khoảng cách giữa các phần tử con */
+}
+
+.header1 {
+    text-align: center;
+    font-weight: bold;
+}
+
+.data {
+    margin-left: 7%;
+    font-size: 17px;
+    line-height: 1.4; /* Điều chỉnh khoảng cách giữa các dòng */
+    word-wrap: break-word; /* Cho phép từ bị cắt ngang nếu nó quá dài */
+}
+

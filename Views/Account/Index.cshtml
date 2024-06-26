@@ -1,0 +1,231 @@
+﻿@using VVA.ITS.WebApp.Services;
+@model PaginatedList<AppUser>
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "VVA ITS - Quản lý người dùng";
+}
+
+@section ExtraCSS{
+	<!-- daterange picker -->
+	<link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+	<!-- Tempusdominus Bootstrap 4 -->
+	<link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+	<!-- Select2 -->
+	<link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+	<!-- Toastr -->
+	<link rel="stylesheet" href="~/plugins/toastr/toastr.min.css">
+	<style>
+		.input-validation-error {
+			border-color: red;
+		}
+	</style>
+}
+
+<div class="row">
+	<div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-users"></i> Quản lý người dùng</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+				@if (TempData["Error"] != null)
+				{
+					<div class="col-md-12 alert alert-danger">
+						<span><b>Lỗi!</b> - @TempData["Error"]</span>
+					</div>
+				}
+				<div asp-validation-summary="All" class="text-danger"></div>
+
+				<input type="hidden" id="inpToastrMessage" value="@ViewData["ToastrMessage"]" />
+				<input type="hidden" id="inpToastrMessageType" value="@ViewData["ToastrMessageType"]" />
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" id="inpSearchUsers" placeholder="Nhập tên người dùng/tên tài khoản/địa chỉ email">
+                            <div class="input-group-append">
+                                <a class="btn btn-sm btn-info" id="btnSearchUsers"><i class="fa fa-search"></i> Tìm kiếm</a>	
+								<a class="btn btn-sm btn-info dropdown-toggle" id="dropdownAdvancedSearchUsers" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Nâng cao
+								</a>
+								<div class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+
+									<div class="p-4">
+
+										<div class="form-row">
+											<div class="col">
+												<div class="form-group">
+													<label style="font-size: 14px">Từ ngày sinh</label>
+													<div class="input-group date">
+														<div class="input-group-prepend">
+															<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+														</div>
+														<input id="inpFromBirthday" type="text" class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask value="">
+													</div>													
+												</div>
+											</div>
+											<div class="col">
+												<div class="form-group">
+													<label style="font-size: 14px">Đến ngày sinh</label>
+													<div class="input-group date">
+														<div class="input-group-prepend">
+															<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+														</div>
+														<input id="inpToBirthday" type="text" class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask value="">
+													</div>													
+												</div>
+											</div>
+										</div>
+
+										<div class="form-row">
+											<div class="col">
+												<div class="form-group-sm">
+													<label style="font-size: 14px">Số CMND/CCCD</label>
+													<input id="inpIdentityNumber" type="text" class="form-control form-control-sm" placeholder="Nhập số CMND/CCCD">
+												</div>
+											</div>
+										</div>
+
+										<div class="form-row">
+											<div class="col">
+												<div class="form-group-sm">
+													<label style="font-size: 14px">Số điện thoại</label>
+													<input id="inpPhoneNumber" type="text" class="form-control form-control-sm" placeholder="Nhập số điện thoại">
+												</div>
+											</div>
+										</div>
+
+										<div class="form-row">
+											<div class="col">
+												<div class="form-group-sm">
+													<label style="font-size: 14px">Địa chỉ</label>
+													<input id="inpAddress" type="text" class="form-control form-control-sm" placeholder="Nhập địa chỉ">
+												</div>
+											</div>
+										</div>
+
+										<div class="btn-group-sm text-right mt-4">
+											<a class="btn btn-sm btn-default" id="btnCloseAdvancedSearch"><i class="far fa-window-close"></i> Xóa bộ lọc</a>
+											<a class="btn btn-sm btn-primary" id="btnAdvancedSearchUsers"><i class="fa fa-search"></i> Tìm kiếm</a>											
+										</div>
+
+									</div>
+
+								</div>
+								<a class="btn btn-sm btn-default" id="btnCloseSearch"><i class="far fa-window-close"></i> Xóa bộ lọc</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-right">                        
+                        <a asp-action="Register" class="btn btn-primary btn-sm"><i class="fas fa-user-plus"></i> Đăng ký tài khoản</a>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-12 table-responsive">
+						<table class="table table-sm" id="tblListUsers">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Họ và tên</th>
+									<th>Tài khoản</th>
+									<th>Email</th>
+									<th style="text-align:center">Trạng thái</th>
+									<th style="text-align:center">Thao tác</th>
+								</tr>
+							</thead>
+							<tbody>
+								@{
+									int order = 0;
+									foreach (AppUser user in Model)
+									{
+										<tr>
+											<td>@(++order)</td>
+											<input type="hidden" value="@user.Id">
+											<td class="full-name">@user.fullName</td>
+											<td class="user-name">@user.UserName</td>
+											<td>@user.Email</td>
+											<td style="text-align:center">
+												<div class="custom-control custom-checkbox">
+													@if (user.isActive)
+													{
+														<input id="@user.Id" userName="@user.UserName" class="custom-control-input activate-user-control" type="checkbox" value="true" checked>
+													}
+													else
+													{
+														<input id="@user.Id" userName="@user.UserName" class="custom-control-input activate-user-control" type="checkbox" value="false">
+													}
+													<label for="@user.Id" class="custom-control-label">Đã kích hoạt</label>
+												</div>
+											</td>
+											<td style="text-align:center">
+												<div class="btn-group">													
+													<a class="btn btn-sm btn-primary btn-edit-user" title="Chỉnh sửa thông tin người dùng"><i class="fas fa-user-edit"></i></a>
+													<a class="btn btn-sm btn-danger btn-delete-user" title="Xóa người dùng"><i class="fas fa-user-alt-slash"></i></a>
+												</div>
+											</td>
+										</tr>
+									}
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+			<!-- /.card-body -->
+			<div class="card-footer">
+				@{
+					var preDisabled = !Model.hasPreviousPage ? "disabled" : "";
+					var nextDisabled = !Model.hasNextPage ? "disabled" : "";
+					var firstDisabled = Model.pageIndex == 1 ? "disabled" : "";
+					var lastDisabled = Model.pageIndex == Model.totalPages ? "disabled" : "";
+				}
+
+				<nav aria-label="Page navigation">
+					<ul class="pagination pagination-sm justify-content-end">
+						<li class="page-item @firstDisabled"><a class="page-link" aria-label="First" asp-controller="Account" asp-action="Index" asp-route-pageNumber="1" title="Trang đầu"><i class="fas fa-angle-double-left"></i></a></li>
+						<li class="page-item @preDisabled"><a class="page-link" asp-controller="Account" asp-action="Index" asp-route-pageNumber="@(Model.pageIndex-1)" aria-label="Previous" title="Trang trước"><i class="fas fa-angle-left"></i></a></li>
+						@for (int i=1; i<=Model.totalPages; i++)
+						{
+							if (i != Model.pageIndex)
+							{
+								<li class="page-item"><a class="page-link" asp-controller="Account" asp-action="Index" asp-route-pageNumber="@i"><font style="font-weight:bold">@i</font></a></li>
+							} else
+							{
+								<li class="page-item active"><a class="page-link" asp-controller="Account" asp-action="Index" asp-route-pageNumber="@i"><font style="font-weight:bold">@i</font></a></li>
+							}
+						}
+						<li class="page-item @nextDisabled"><a class="page-link" asp-controller="Account" asp-action="Index" asp-route-pageNumber="@(Model.pageIndex+1)" aria-label="Next" title="Trang sau"><i class="fas fa-angle-right"></i></a></li>
+						<li class="page-item @lastDisabled"><a class="page-link" asp-controller="Account" asp-action="Index" asp-route-pageNumber="@Model.totalPages" aria-label="Last" title="Trang cuối"><i class="fas fa-angle-double-right"></i></a></li>
+					</ul>
+				</nav>
+            </div>
+            <!-- /.card-footer -->
+        </div>
+        <!-- /.card -->
+	</div>
+</div>
+<!--/.row -->
+
+@section ExtraScripts{
+	<!-- Select2 -->
+	<script src="~/plugins/select2/js/select2.full.min.js"></script>
+	<!-- Moment -->
+	<script src="~/plugins/moment/moment.min.js"></script>
+	<!-- InputMask -->
+	<script src="~/plugins/inputmask/jquery.inputmask.min.js"></script>
+	<!-- date-range-picker -->
+	<script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+	<!-- Tempusdominus Bootstrap 4 -->
+	<script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+	<!-- Bootbox -->
+	<script src="~/plugins/bootbox/bootbox.min.js"></script>
+	<!-- Toastr -->
+	<script src="~/plugins/toastr/toastr.min.js"></script>
+	<!-- Page script -->
+	<script src="~/js/account/index.js"></script>
+}

@@ -1,0 +1,171 @@
+﻿@using VVA.ITS.WebApp.Services;
+@using Microsoft.AspNetCore.Identity;
+@model RoleViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "VVA ITS - Quản lý phân quyền";
+}
+
+@section ExtraCSS{
+    <!-- Toastr -->
+    <link rel="stylesheet" href="~/plugins/toastr/toastr.min.css">
+    <style>
+        .input-validation-error {
+            border-color: red;
+        }
+    </style>
+}
+
+
+
+<!-- Thông tin tài khoản -->
+<div class="row">
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-users-cog"></i> Quản lý phân quyền</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="col-md-12 alert alert-danger">
+                        <span><b>Lỗi!</b> - @TempData["Error"]</span>
+                    </div>
+                }
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <input type="hidden" id="inpToastrMessage" value="@ViewData["ToastrMessage"]" />
+                <input type="hidden" id="inpToastrMessageType" value="@ViewData["ToastrMessageType"]" />
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" id="inpSearchRoles" placeholder="Nhập tên/mã định danh của phân quyền">
+                            <div class="input-group-append">
+                                <a class="btn btn-sm btn-info" id="btnSearchRoles"><i class="fa fa-search"></i> Tìm kiếm</a>
+                                <a class="btn btn-sm btn-default" id="btnCloseSearch"><i class="far fa-window-close"></i> Xóa bộ lọc</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <a id="btnCreateRole" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Thêm phân quyền</a>
+                    </div>
+                </div>
+
+                <br/>
+
+                <div class="row">
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-sm" id="tblListRoles">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên phân quyền</th>
+                                    <th>Danh sách người dùng</th>
+                                    <th style="text-align:center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int order = 0;
+                                    foreach (IdentityRole role in Model.roles)
+                                    {
+                                        <tr>
+                                            <td>@(++order)</td>
+                                            <input type="hidden" value="@role.Id"/>
+                                            <td class="role-name">@role.Name</td>
+                                            @{
+                                                bool havingUsers = false;
+                                                string ulUsers = "<nav><ul class=\"nav nav-pills nav-sidebar flex-column\">";
+                                                foreach (AppUser user in Model.userManager.Users)
+                                                {
+                                                    if (await Model.userManager.IsInRoleAsync(user, role.Name))
+                                                    {
+                                                        ulUsers += "<li class=\"nav-item\">";
+                                                        //ulUsers += "<a class=\"nav-link\" asp-controller=\"Account\" asp-action=\"Update\" asp-route-userID=\""+user.Id+"\">";
+                                                        ulUsers += "<a class=\"nav-link\" href=\"\\Account\\Update?userID="+user.Id+"\">";
+                                                        //Ex: https://localhost:7104/Account/Update?userID=2bcb30c7-916b-439c-8d12-737e802d9017
+                                                        ulUsers += "<i class=\"nav-icon fas fa-user-alt\"></i>";
+                                                        ulUsers += "<p>"+user.fullName + " - " + user.UserName+"</p>";
+                                                        ulUsers += "</a>";
+                                                        ulUsers += "</li>";
+                                                        havingUsers = true;
+                                                    }
+                                                }
+                                                ulUsers += "</ul></nav>";
+                                                if (!havingUsers) {
+                                                    ulUsers = "<nav><ul class=\"nav nav-pills nav-sidebar flex-column\">";
+                                                    ulUsers += "<li class=\"nav-item\">";
+                                                    ulUsers += "<a href=\"#\" class=\"nav-link\">";
+                                                    ulUsers += "<i class=\"nav-icon fas fa-user-alt\"></i>";
+                                                    ulUsers += "<p>Chưa có</p>";
+                                                    ulUsers += "</a>";
+                                                    ulUsers += "</li>";
+                                                    ulUsers += "</ul></nav>";
+                                                }
+                                            }
+                                            <td i-role="@role.Id">@Html.Raw(ulUsers)</td>
+                                            <td style="text-align:center">
+                                                <div class="btn-group btn-group-sm">
+                                                    <a class="btn btn-sm btn-primary btn-edit-role" title="Điều chỉnh thông tin phân quyền"><i class="far fa-edit"></i></a>
+                                                    <a class="btn btn-sm btn-danger btn-delete-role" title="Xóa phân quyền"><i class="far fa-trash-alt"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                @{
+                    var preDisabled = !Model.roles.hasPreviousPage ? "disabled" : "";
+                    var nextDisabled = !Model.roles.hasNextPage ? "disabled" : "";
+                    var firstDisabled = Model.roles.pageIndex == 1 ? "disabled" : "";
+                    var lastDisabled = Model.roles.pageIndex == Model.roles.totalPages ? "disabled" : "";
+                }
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm justify-content-end">
+                        <li class="page-item @firstDisabled"><a class="page-link" aria-label="First" asp-controller="Role" asp-action="Index" asp-route-pageNumber="1" title="Trang đầu"><i class="fas fa-angle-double-left"></i></a></li>
+                        <li class="page-item @preDisabled"><a class="page-link" asp-controller="Role" asp-action="Index" asp-route-pageNumber="@(Model.roles.pageIndex-1)" aria-label="Previous" title="Trang trước"><i class="fas fa-angle-left"></i></a></li>
+                        @for (int i = 1; i <= Model.roles.totalPages; i++)
+                        {
+                            if (i != Model.roles.pageIndex)
+                            {
+                                <li class="page-item"><a class="page-link" asp-controller="Role" asp-action="Index" asp-route-pageNumber="@i"><font style="font-weight:bold">@i</font></a></li>
+                            }
+                            else
+                            {
+                                <li class="page-item active"><a class="page-link" asp-controller="Role" asp-action="Index" asp-route-pageNumber="@i"><font style="font-weight:bold">@i</font></a></li>
+                            }
+                        }
+                        <li class="page-item @nextDisabled"><a class="page-link" asp-controller="Role" asp-action="Index" asp-route-pageNumber="@(Model.roles.pageIndex+1)" aria-label="Next" title="Trang sau"><i class="fas fa-angle-right"></i></a></li>
+                        <li class="page-item @lastDisabled"><a class="page-link" asp-controller="Role" asp-action="Index" asp-route-pageNumber="@Model.roles.totalPages" aria-label="Last" title="Trang cuối"><i class="fas fa-angle-double-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- /.card-footer -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!--/.col -->
+</div>
+<!--/.row -->
+
+
+@section ExtraScripts{
+    <!-- Bootbox -->
+    <script src="~/plugins/bootbox/bootbox.min.js"></script>
+    <!-- Toastr -->
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <!-- Page script -->
+    <script src="~/js/role/index.js"></script>
+}

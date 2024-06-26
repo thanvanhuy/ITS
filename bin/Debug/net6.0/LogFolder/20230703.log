@@ -1,0 +1,1 @@
+03-07-2023  16:23:48.177 Timer_Elapsed() - Error: BeginExecuteReader requires an open and available Connection. The connection's current state is closed.

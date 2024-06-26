@@ -1,0 +1,47 @@
+﻿<nav class="mt-2">
+    <ul id="sidebarMenu" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+             with font-awesome or any other icon font library -->
+        <li class="nav-item">
+            <a id="menuDashboard" asp-controller="Dashboard" asp-action="Index" class="nav-link">
+                <i class="fas fa-home"></i>
+                <p>
+                    Trang chủ
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a id="Canxe" asp-controller="Live" asp-action="Index" class="nav-link">
+                <i class="fas fa-weight"></i>
+                <p>Cân xe</p>
+            </a>
+        </li>
+        @if (User.Identity.Name == "Admin")
+        {
+            <li class="nav-item">
+                <a id="menuRegisterUser" asp-controller="Account" asp-action="Register" class="nav-link">
+                    <i class="fa fa-user-plus" style="color:green"></i>
+                    <p>Thêm mới người dùng</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a id="menuDeleteUser" asp-controller="Account" asp-action="Index" class="nav-link">
+                    <i class="fas fa-user-times" style="color:red"></i>
+                    <p>Xóa bỏ người dùng</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a id="menuListRole" asp-controller="Role" asp-action="Index" class="nav-link">
+                    <i class="fa fa-hospital-user" style="color:yellow"></i>
+                    <p>Danh sách phân quyền</p>
+                </a>
+            </li>
+        }
+        <li class="nav-item">
+            <a id="Account" asp-controller="Account" asp-action="Logout" class="nav-link">
+                <i class="far fa-arrow-alt-circle-right"></i>
+                <p>Đăng xuất</p>
+            </a>
+        </li>
+    </ul>
+</nav>

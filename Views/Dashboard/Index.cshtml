@@ -1,0 +1,295 @@
+﻿@using VVA.ITS.WebApp.ViewModels;
+@model DashboardViewModel;
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "VVA ITS - Hệ giám sát giao thông thông minh";
+}
+
+@section ExtraCSS{
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+}
+<audio hidden id="warningAudio" controls>
+    <source src="/round/warning.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Biểu đồ thống kê xe vi phạm 7 ngày gần nhất</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                   @*  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button> *@
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart">
+                    <canvas id="barChart1" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="search-panel">
+    <div class="search-panel-item">
+        <span><b>Loại xe</b></span>
+        <select id="vehicleType" class="form-control">
+            <option value="0">Tất cả</option>
+            <option value="1">Xe máy</option>
+            <option value="2">Xe oto</option>
+        </select>
+    </div>
+    <div class="search-panel-item">
+        <span><b>Biển số</b></span>
+        <input class="form-control" id="LicensePlate" type="text" value="">
+    </div>
+
+    <div class="search-panel-item">
+        <span><b>Hướng</b></span>
+        <select id="direction" class="form-control">
+            <option value="0">Tất cả</option>
+            <option value="1">DT854</option>
+            <option value="2">Chợ cái tàu hạ</option>
+        </select>
+    </div>
+
+    <div class="search-panel-item">
+        <span><b>Từ thời điểm</b></span>
+        <input type="text" class="form-control datetimepicker" id="startDate" name="tuNgay" value="@DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy HH:mm")" />
+    </div>
+
+    <div class="search-panel-item">
+        <span><b>Đến thời điểm</b></span>
+        <input type="text" class="form-control datetimepicker" id="endDate" name="denNgay" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm")" />
+    </div>
+    <div class="search-panel-item">
+        <span><b>Quá tốc độ</b></span>
+        <select id="overWeight" class="form-control">
+            <option value="0">Tất cả</option>
+            <option value="1">Không quá tốc độ</option>
+            <option value="2">Từ5-10km/h</option>
+            <option value="3">Từ 10-20Km/h</option>
+            <option value="4">Từ20-35km/h</option>
+            <option value="5">35km/h</option>
+        </select>
+    </div>
+    <div class="search-panel-item">
+        <span><b>Loại vi phạm</b></span>
+        <select id="violate" class="form-control">
+            <option value="0">Tất cả</option>
+            <option value="1">Không đội mũ bảo hiểm</option>
+            <option value="2">Xe chở ba</option>
+        </select>
+    </div>
+   @*  <div class="search-panel-item">
+       <p><video src="http://192.188.0.183:8080" autoplay="autoplay" width="704" height="480"></video></p>
+    </div> *@
+    <div class="search-panel-item">
+        <span></span><br>
+        <button id="btnExportData" class="btn btn-primary form-control" type="button" data-toggle="tooltip" title="Xuất báo cáo dữ liệu" data-placement="bottom">Xuất báo cáo</button>
+    </div> 
+    <div class="search-panel-item">
+        <span></span><br>
+        <button id="btnseach" class="btn btn-primary form-control" type="button" data-toggle="tooltip" title="Tìm kiếm" data-placement="bottom">Tìm kiếm</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                        
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive-lg">
+                <table id="listVehicleDashboard" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="vertical-align:top; text-align:center">Địa điểm</th>
+                            <th style="vertical-align:top; text-align:center">Thời gian</th>
+                            <th style="vertical-align:top; text-align:center">Biển số</th>
+                            <th style="vertical-align:top; text-align:center">Loại BS</th>
+                            <th style="vertical-align:top; text-align:center">Màu BS</th>
+                            <th style="vertical-align:top; text-align:center">Tốc độ</th>
+                            <th style="vertical-align:top; text-align:center">Hướng đi</th>
+                            <th style="vertical-align:top; text-align:center">Loại xe</th>
+                            <th style="vertical-align:top; text-align:center">Màu xe</th>
+                            <th style="vertical-align:top; text-align:center">Hãng xe</th>
+                            <th style="vertical-align:top; text-align:center">Hình toàn cảnh</th>
+                            <th style="vertical-align:top; text-align:center">Hình xe</th>
+                            <th style="vertical-align:top; text-align:center">Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var vehicle in @Model.vehicles)
+                        {
+                           
+                            <tr style="cursor:grab">
+                                <td>@vehicle.Device</td>
+                                <td>@vehicle.Time</td>
+                                <td>@vehicle.Plate</td>
+                                <td>@vehicle.Type</td>
+                                <td>@vehicle.Plate_Color</td>
+                                <td>@vehicle.Speed</td>
+                                <td>@vehicle.Direction</td>
+                                <td>@vehicle.Vehicle_Type</td>
+                                <td>@vehicle.Vehicle_Color</td>
+                                <td>@vehicle.Vehicle_Brand</td>
+                                <td><img class="img-fluid img-thumbnail" loading="lazy" src=" @vehicle.Plate_Image" width="100" height="100"></td>
+                                <td><img class="img-fluid img-thumbnail" loading="lazy" src="@vehicle.Full_Image" width="100" height="100"></td>
+                                <td><a asp-controller="Dashboard" asp-action="GetVehicleDetailsById" asp-route-id="@vehicle.Id" target="_blank"><i class="fas fa-eye"></i></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th style="vertical-align:top">Địa điểm</th>
+                            <th style="vertical-align:top">Thời gian</th>
+                            <th style="vertical-align:top">Biển số</th>
+                            <th style="vertical-align:top">Loại BS</th>
+                            <th style="vertical-align:top">Màu BS</th>
+                            <th style="vertical-align:top">Tốc độ</th>
+                            <th style="vertical-align:top">Hướng đi</th>
+                            <th style="vertical-align:top">Loại xe</th>
+                            <th style="vertical-align:top">Màu xe</th>
+                            <th style="vertical-align:top">Hãng xe</th>
+                            <th style="vertical-align:top">Hình BS</th>
+                            <th style="vertical-align:top">Hình xe</th>
+                            <th style="vertical-align:top">Chi tiết</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+
+<!--Modal Xem thông tin chi tiết xe-->
+<div class="modal fade" id="modalVehicleDetail">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!--Modal Header-->
+            <div class="modal-header">
+                <h4 class="modal-title">Thông tin chi tiết xe</h4>
+                <input type="text" hidden id="idxe" value="">
+                <button type="button" class="close required" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!--Modal Body-->
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label for="inputDate" class="col-sm-2 col-form-label">Ngày</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputDate" value="">
+                    </div>
+                    <label for="inputTime" class="col-sm-2 col-form-label">Giờ</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputTime" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPlate" class="col-sm-2 col-form-label">Biển số</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputPlate" value="">
+                    </div>
+                    <label for="inputType" class="col-sm-2 col-form-label">Loại biển số</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputType" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputSpeed" class="col-sm-2 col-form-label">Tốc độ</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputSpeed" value="">
+                    </div>
+                    <label for="inputDirection" class="col-sm-2 col-form-label">Hướng đi</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputDirection" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputVehicleType" class="col-sm-2 col-form-label">Loại xe</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputVehicleType" value="">
+                    </div>
+                    <label for="inputConfidence" class="col-sm-2 col-form-label">Tọa độ thiết bị</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputConfidence" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputVehicleColor" class="col-sm-2 col-form-label">Màu xe</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputVehicleColor" value="">
+                    </div>
+                    <label for="inputVehicleBrand" class="col-sm-2 col-form-label">Thương hiệu</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputVehicleBrand" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPlateColor" class="col-sm-2 col-form-label">Màu biển số</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputPlateColor" value="">
+                    </div>
+                    <label for="inputresut" class="col-sm-2 col-form-label">Kết luận</label>
+                    <div class="col-sm-4">
+                        <input type="text" readonly class="form-control-plaintext" id="inputresut" value="">
+                    </div>
+                </div>
+                <div class="form-group row text-center">
+                    @* <label class="col-sm-12">Hình xe</label> *@
+                    <div class="col-sm-6">
+                        <label for="inputPlateImage" class="col-form-label">Hình trước</label>
+                        <div id="inputPlateImage">
+                            <!-- Plate image content -->
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="inputFullImage" class="col-form-label">Hình sau</label>
+                        <div id="inputFullImage">
+                            <!-- Full image content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Modal Footer-->
+            <!--div class="modal-footer justify-content-between"-->
+            <div class="modal-footer justify-content-center">
+
+                <button type="button" class="btn btn-secondary" target="_blank" onclick="generatePDF1()">Lập biên bản</button>
+                <!-- @*  data-dismiss="modal" *@ -->
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+@section ExtraScripts{
+    <!-- Select2 -->
+    <script src="~/plugins/select2/js/select2.full.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/plugins/chart.js/Chart.min.js"></script>
+    <!-- Bootbox for showing alert -->
+    <script src="~/plugins/bootbox/bootbox.all.min.js"></script>
+    <!-- Page signalr script -->
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/dashboard/dashboardSignalR.js"></script>
+    <!-- Page specific script -->
+    <script src="~/js/dashboard/dashboard.js"></script>
+}

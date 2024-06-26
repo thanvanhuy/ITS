@@ -1,0 +1,47 @@
+{
+  "profiles": {
+    "VVA.ITS.WebApp": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://0.0.0.0:201"
+      //"applicationUrl": "https://0.0.0.0:7104;http://0.0.0.0:5287"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      //"applicationUrl": "http://0.0.0.0:60445", // Chỉnh sửa URL để sử dụng 0.0.0.0
+      "applicationUrl": "http://0.0.0.0:201",
+      "sslPort": 44379
+    }
+  }
+}
+// tạo cổng trùng với cổng build docker
+//build image : docker build -t its .
+// run container : docker run -d -p 201:80 --name my-its-app its
+// đưa qua máy khác 
+
+//docker save -o its_image.tar its:latest
+//docker load -i its_image.tar
+//docker run -d -p 201:80 --name my-its-app its
+// map foder : docker run -d -p 201:80 --name my-its-app -v D:\VVAITS\IMGS:/app/IMGS its
+
+
+//docker rm -f my-its-app
+  //docker run -d -p 201:80 --name my-its-app --mount type=bind,source=D:\VVAITS\IMGS,target=/app/wwwroot/IMGS its
+
+
+
+
