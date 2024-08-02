@@ -10,7 +10,6 @@ using VVA.ITS.WebApp.SubscribeTableDependencies;
 using VVA.ITS.WebApp.MiddlewareExtensions;
 using DinkToPdf.Contracts;
 using DinkToPdf;
-using System.Web.Services.Description;
 using VVA.ITS.WebApp.Services;
 
 // Real-time update data:
@@ -21,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //{
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

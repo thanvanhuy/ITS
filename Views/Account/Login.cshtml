@@ -21,10 +21,14 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="http://vva.com.vn/vision/" class="h2"><b>VVA</b>ITS</a>
+                <a href="https://vva.com.vn/" class="h2" target="_blank">
+                    <b>
+                        PHẦN MỀM QUẢN LÝ
+                    </b>
+                </a>
             </div>
             <div class="card-body">
-                <p class="login-box-msg">Đăng nhập để bắt đầu phiên làm việc</p>
+                <p class="login-box-msg">GIAO THÔNG THÔNG MINH VVA-ITS</p>
                 @if (TempData["Error"] != null)
                 {
                     <div class="col-md-12 alert alert-danger">
@@ -32,11 +36,10 @@
                     </div>
                 }
                 <form asp-action="Login" method="post">
-                    @*<input type="hidden" asp-for="returnUrl"/>*@
+                   
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="input-group mb-3">
                         <input asp-for="userName" type="text" class="form-control" placeholder="Tên tài khoản">
-                        <!--input asp-for="emailAddress" type="text" class="form-control" placeholder="Tên tài khoản"-->
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -60,20 +63,16 @@
                                 </label>
                             </div>
                         </div>
-                        <!-- /.col -->
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                         </div>
-                        <!-- /.col -->
                     </div>
                 </form>
             </div>
-            <!-- /.card-body -->
+            <p class="login-box-msg">Địa chỉ: 456/47 Cao Thắng, Phường 12, Quận 10, Thành Phố Hồ Chí Minh</p>
         </div>
-        <!-- /.card -->
     </div>
-    <!-- /.login-box -->
-    <!-- jQuery -->
+   
     <script src="~/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -82,3 +81,8 @@
 </body>
 </html>
 
+<style>
+    .login-page{
+        background-color: #89d2ef;
+    } 
+</style>

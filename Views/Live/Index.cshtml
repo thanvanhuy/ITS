@@ -58,7 +58,7 @@
    
     <div class="search-panel-item">
         <span></span><br>
-        <button id="" class="btn btn-primary form-control" type="button" data-toggle="tooltip" title="Xuất báo cáo dữ liệu" data-placement="bottom">Xuất báo cáo</button>
+        <button id="exportexelcan" class="btn btn-primary form-control" type="button" data-toggle="tooltip" title="Xuất báo cáo dữ liệu" data-placement="bottom">Xuất báo cáo</button>
     </div>
     <div class="search-panel-item">
         <span></span><br>
@@ -122,8 +122,8 @@
                                     <td>@vehicle.TTLtruc</td>
                                     <td>@vehicle.TLgiayphep</td>
                                     <td>@vehicle.TLtruc1</td>
-                                    <td>@vehicle.Quataitong</td>
-                                    <td>@vehicle.Quataitheogp</td>
+                                    <td>@vehicle.Quataitong.ToString("0.00")</td>
+                                    <td>@vehicle.Quataitheogp.ToString("0.00")</td>
                                     <td><img class="img-fluid img-thumbnail" loading="lazy" src="@hinhxe" width="100" height="100"></td>
                                     <td>001</td>
                                     <td class="showweigh" data-id="@vehicle.Id">

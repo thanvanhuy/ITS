@@ -14,7 +14,7 @@
         @await Html.PartialAsync("_Preloader")
 
         <!-- Navbar -->
-        @await Html.PartialAsync("_Navbar")
+       @*  @await Html.PartialAsync("_Navbar") *@
         <!-- /.navbar -->
         <!-- Main Sidebar Container -->
         @await Html.PartialAsync("_Sidebar")
@@ -23,10 +23,10 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            @await RenderSectionAsync("ContentHeader", required: false)
+          @*   @await RenderSectionAsync("ContentHeader", required: false) *@
             <!-- /.content-header -->
             <!-- Main content -->
-            <section class="content">
+            <section class="content" style="margin-left:170px">
                 <div class="container-fluid">
                     @RenderBody()
                 </div><!-- /.container-fluid -->
@@ -36,11 +36,7 @@
         <!-- /.content-wrapper -->
         @await Html.PartialAsync("_Footer")
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
+      
     </div>
     <!-- ./wrapper -->
     @await Html.PartialAsync("_CommonScript")

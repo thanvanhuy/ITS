@@ -1,0 +1,32 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "VVA ITS - Bản đồ";
+}
+<div class="row">
+    <div class="col-6">
+        <div class="card card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Bản đồ </h3>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15704.26213779164!2d105.87796480657775!3d10.256298451900808!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310a81294e37bedd%3A0x13a4dd28c51ccdd5!2zODEgxJBUODU0LCBUVC4gQ8OhaSBUw6B1IEjhuqEsIENow6J1IFRow6BuaCwgxJDhu5NuZyBUaMOhcCwgVmlldG5hbQ!5e0!3m2!1sen!2s!4v1722223933283!5m2!1sen!2s" width="700" height="900" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Video trực tuyến</h3>
+            </div>
+            @* Đã stream được *@
+            <div class="card-body" style="display: block;">
+                <img src="http://192.188.0.10:8085/stream.mpjpeg" width="640" height="480" alt="Camera Stream" />
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

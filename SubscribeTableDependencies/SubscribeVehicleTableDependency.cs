@@ -6,6 +6,7 @@ using AppUtilObjectCore;
 using TableDependency.SqlClient.Base;
 using Microsoft.AspNetCore.Identity;
 using DocumentFormat.OpenXml.InkML;
+using System.Diagnostics;
 
 namespace VVA.ITS.WebApp.SubscribeTableDependencies
 {
@@ -52,10 +53,10 @@ namespace VVA.ITS.WebApp.SubscribeTableDependencies
             //Console.WriteLine("platesend " + DashboardHub.platesend);
             //Console.WriteLine("speedsend " + DashboardHub.speedsend);
             //Console.WriteLine("directionsend " + DashboardHub.directionsend);
-           
+
             if (!DashboardHub.checkfind)
             {
-                await dashboardHub.SendVehicles();
+               await dashboardHub.SendVehicles();  
             }
         }
     }

@@ -48,7 +48,39 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.getElementById("exportexelcan").addEventListener("click", function () {
+    var startDateValue = document.getElementById('start').value;
+    var endDateValue = document.getElementById('end').value;
 
+    if (!startDateValue || !endDateValue) {
+        console.error("Start date and end date are required.");
+        return;
+    }
+    var startDate = startDateValue.split(' ');
+    var endDate = endDateValue.split(' ');
+    if (startDate.length < 2 || endDate.length < 2) {
+        console.error("Invalid date format.");
+        return;
+    }
+    var startDateFormatted = startDate[0].split('/').reverse().join('-') + ' ' + startDate[1];
+    var endDateFormatted = endDate[0].split('/').reverse().join('-') + ' ' + endDate[1];
+
+    var plate = document.getElementById('PlateWeigh').value;
+    var VehicleType = parseInt(document.getElementById("type_can").value, 10);
+    var TypeViolation = parseInt(document.getElementById("TypeViolation").value, 10);
+    var ViolationRatio = parseInt(document.getElementById("ViolationRatio").value, 10);
+
+    var seachVehicles = {
+        VehicleType: VehicleType,
+        Plate: plate,
+        TypeViolation: TypeViolation,
+        starttime: startDateFormatted,
+        endtime: endDateFormatted,
+        ViolationRatio: ViolationRatio,
+        ListStation: 0
+    }
+    excel(seachVehicles)
+})
 document.getElementById("seachweigh").addEventListener("click", function () {
     var startDateValue = document.getElementById('start').value;
     var endDateValue = document.getElementById('end').value;
@@ -91,9 +123,9 @@ async function searchbyid(id) {
     const respons = await fetch(url, options);
    // console.log(respons)
     //
-    if (respons != null) {
+    if (respons.status = 200) {
         var data = await respons.json();
-        console.log(data)
+       // console.log(data)
         var timeArray = data.thoigian.split("T");
         let date = new Date(timeArray[0]);
         if (data.kieuxe.length <= 0) {
@@ -108,15 +140,15 @@ async function searchbyid(id) {
             ketluan += `<h4 >Kết luận</h4>
                     `;
             if (parseFloat(data.quataitong) > 0) {
-                ketluan += `<p style="color:red">Xe vượt tổng trọng lượng cho phép của cầu, đường: ${data.quataitong} %</p>`;
+                ketluan += `<p style="color:red">Xe vượt tổng trọng lượng cho phép của cầu, đường: ${data.quataitong.toFixed(2) } %</p>`;
             }
-            if (parseFloat(data.quataitheogp.replace("%", "")) > 0) {
-                ketluan += `<p style="color:red">Xe vượt khối lượng hàng CC CPTGGT: ${data.quataitheogp}</p>`;
+            if (parseFloat(data.quataitheogp) > 0) {
+                ketluan += `<p style="color:red">Xe vượt khối lượng hàng CC CPTGGT: ${data.quataitheogp.toFixed(2) } %</p>`;
             }
             if (parseFloat(data.quataitruc1) > 0 || parseFloat(data.quataitruc2) > 0 || parseFloat(data.quataitruc3) > 0) {
 
                 let maxQuataitruc = Math.max(parseFloat(data.quataitruc1), parseFloat(data.quataitruc2), parseFloat(data.quataitruc3));
-                ketluan += `<p style="color:red">Xe vượt tải trọng trục cho phép, đường: ${maxQuataitruc}</p>`;
+                ketluan += `<p style="color:red">Xe vượt tải trọng trục cho phép, đường: ${maxQuataitruc.toFixed(2) } %</p>`;
             }
         }
         var hinh = "/img/" + data.kieuxe + ".png";
@@ -136,6 +168,43 @@ async function searchbyid(id) {
         $("#ketluan").html(ketluan);
 
         $("#modalWeighDetail").modal('show');
+    }
+}
+async function excel(searchVehicles) {
+    var url = "/Live/ExportExel";
+    var options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(searchVehicles),
+    };
+
+    try {
+        var response = await fetch(url, options);
+
+        if (response.ok) {
+            var filename = "";
+            var disposition = response.headers.get('Content-Disposition');
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                var matches = filenameRegex.exec(disposition);
+                if (matches != null && matches[1]) {
+                    filename = matches[1].replace(/['"]/g, '');
+                }
+            }
+            var blob = await response.blob();
+
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+        } else {
+            console.error('Failed to download file:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
 }
 
@@ -175,8 +244,8 @@ async function seach(seachVehicles) {
                     <td>${vehicle.ttLtruc}</td>
                     <td>${vehicle.tLgiayphep}</td>
                     <td>${vehicle.tLtruc1}</td>
-                    <td>${vehicle.quataitong}</td>
-                    <td>${vehicle.quataitheogp}</td>
+                    <td>${vehicle.quataitong.toFixed(2) }</td>
+                    <td>${vehicle.quataitheogp.toFixed(2) }</td>
                     <td><img class="img-fluid img-thumbnail" loading="lazy" src="${hinhxe}" width="100" height="100"></td>
                     <td>001</td>
                     <td class="showweigh" data-id="${vehicle.id}">

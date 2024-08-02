@@ -1,8 +1,11 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Syncfusion.Drawing;
+using Syncfusion.Presentation;
 using System.Globalization;
 using VVA.ITS.WebApp.Interfaces;
 using VVA.ITS.WebApp.Models;
@@ -50,7 +53,7 @@ namespace VVA.ITS.WebApp.Controllers
 		}
 
         [HttpPost]
-        public async Task<DataXe> SeachWeightById(int id)
+        public async Task<DataXe> SeachWeightById(string id)
         {
             try
             {
@@ -66,7 +69,7 @@ namespace VVA.ITS.WebApp.Controllers
             return null;
         }
         [HttpPost]
-        public async  Task<IActionResult>UpdateImage(IFormFileCollection files,int id)
+        public async  Task<IActionResult>UpdateImage(IFormFileCollection files,string id)
         {
             try
             {
@@ -149,7 +152,152 @@ namespace VVA.ITS.WebApp.Controllers
             return data;
         }
         [HttpPost]
-        public async Task<IActionResult> Createpdf(int id)
+        public async Task<IActionResult> ExportExel([FromBody] SeachVehicles seach)
+        {
+            try
+            {
+                AppUser user = await userManager.GetUserAsync(HttpContext.User);
+                if (user != null)
+                {
+                    List<DataXe> data = await SeachWeight(seach);
+                    if (user.UserName == "svtt1")
+                    {
+                        if (data != null && data.Count > 0)
+                        {
+                            string filePath = Path.Combine(env.ContentRootPath, "wwwroot", "exel", "phieucanxe.xlsx");
+
+                            using (XLWorkbook wb = new XLWorkbook(filePath))
+                            {
+                                IXLWorksheet worksheet = wb.Worksheet(1);
+
+                                if (worksheet != null)
+                                {
+                                    int row = 11; // Dòng bắt đầu ghi dữ liệu
+                                    int i = 1;
+                                    foreach (var vehicle in data)
+                                    {
+                                        //STT
+                                        worksheet.Range($"A{row}:A{row + 1}").Merge();
+                                        worksheet.Cell(row, 1).Value = i;
+                                        i++;
+                                        // Loại xe
+                                        worksheet.Cell(row, 2).Value = clsHelps.GetVehicleTypeString((int)vehicle.Loaixe);
+                                        worksheet.Range($"B{row}:B{row + 1}").Merge();
+
+                                        // Kí hiệu
+                                        worksheet.Cell(row, 3).Value = $"({vehicle.Loaixe})";
+                                        worksheet.Range($"C{row}:C{row + 1}").Merge();
+
+                                        // Biển kiểm soát
+                                        worksheet.Cell(row, 4).Value = vehicle.Biensotruoc;
+                                        worksheet.Range($"D{row}:D{row + 1}").Merge();
+
+                                        // Số trục xe
+                                        worksheet.Cell(row, 5).Value = 0;
+                                        worksheet.Cell(row + 1, 5).Value = "K/cách trục";
+
+                                        // Tải trọng trục
+                                        worksheet.Cell(row, 6).Value = vehicle.Taitrongtruc1;
+                                        worksheet.Cell(row, 7).Value = vehicle.Taitrongtruc2;
+                                        worksheet.Cell(row, 8).Value = vehicle.Taitrongtruc3;
+                                        worksheet.Cell(row, 9).Value = vehicle.Taitrongtruc4;
+                                        worksheet.Cell(row, 10).Value = vehicle.Taitrongtruc5;
+                                        worksheet.Cell(row, 11).Value = vehicle.Taitrongtruc6;
+
+                                        worksheet.Cell(row + 1, 6).Value = 0;
+                                        worksheet.Cell(row + 1, 7).Value = 0;
+                                        worksheet.Cell(row + 1, 8).Value = 0;
+                                        worksheet.Cell(row + 1, 9).Value = 0;
+                                        worksheet.Cell(row + 1, 10).Value = 0;
+                                        worksheet.Cell(row + 1, 11).Value = 0;
+
+                                        // Tải trọng từng cụm trục
+                                        worksheet.Range($"L{row}:L{row + 1}").Column(1).Merge();
+                                        worksheet.Range($"M{row}:M{row + 1}").Column(1).Merge();
+                                        worksheet.Range($"N{row}:N{row + 1}").Column(1).Merge();
+                                        worksheet.Range($"O{row}:O{row + 1}").Column(1).Merge();
+                                        worksheet.Range($"P{row}:P{row + 1}").Column(1).Merge();
+                                        worksheet.Range($"Q{row}:Q{row + 1}").Column(1).Merge();
+                                        worksheet.Range($"R{row}:R{row + 1}").Column(1).Merge();
+                                        worksheet.Range($"S{row}:S{row + 1}").Column(1).Merge();
+
+                                        worksheet.Cell(row, 12).Value = vehicle.TLtruc1;
+                                        worksheet.Cell(row, 13).Value = vehicle.TLtruc2;
+                                        worksheet.Cell(row, 14).Value = vehicle.TLtruc3;
+                                        worksheet.Cell(row, 15).Value = vehicle.TTLtruc;
+                                        worksheet.Cell(row, 16).Value = vehicle.Quataitong;
+                                        worksheet.Cell(row, 17).Value = vehicle.Quataitheogp;
+
+                                        // Tăng dòng để ghi dữ liệu cho xe tiếp theo
+                                        row += 2;
+                                    }
+
+                                    using (MemoryStream stream = new MemoryStream())
+                                    {
+                                        wb.SaveAs(stream);
+                                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"phieucan_{DateTime.Now.ToString("yyMMddHHmmss")}.xlsx");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (data != null && data.Count > 0)
+                        {
+                            string filePath = Path.Combine(env.ContentRootPath, "wwwroot", "exel", "baocaocanxe.xlsx");
+
+                            using (XLWorkbook wb = new XLWorkbook(filePath))
+                            {
+                                IXLWorksheet worksheet = wb.Worksheet(1);
+
+                                if (worksheet != null)
+                                {
+                                    int row = 6; 
+                                    foreach (var vehicle in data)
+                                    {
+                                        worksheet.Cell(row, 1).Value = row-5;
+                                        worksheet.Cell(row, 2).Value = vehicle.Thoigian;
+                                        worksheet.Cell(row, 3).Value = clsHelps.gettrucxe(int.Parse(vehicle.Kieuxe));
+                                        worksheet.Cell(row, 4).Value = clsHelps.getsocautruc(int.Parse(vehicle.Kieuxe));
+                                        worksheet.Cell(row, 5).Value = vehicle.Biensotruoc;
+                                        worksheet.Cell(row, 6).Value = vehicle.Biensosau;
+                                        worksheet.Cell(row, 7).Value = vehicle.Tocdo;
+                                        worksheet.Cell(row, 8).Value = vehicle.TTLtruc;
+                                        worksheet.Cell(row, 9).Value = vehicle.TLgiayphep;
+                                        worksheet.Cell(row, 10).Value = vehicle.Taitrongtruc1;
+                                        worksheet.Cell(row, 11).Value = vehicle.Quataitruc1;
+                                        worksheet.Cell(row, 12).Value = vehicle.Quataitruc2;
+                                        worksheet.Cell(row, 13).Value = vehicle.Quataitruc3;
+                                        worksheet.Cell(row, 14).Value = vehicle.TLtruc2;
+                                        worksheet.Cell(row, 15).Value = vehicle.Quataitruc2;
+                                        worksheet.Cell(row, 16).Value = vehicle.Taitrongtruc4;
+                                        worksheet.Cell(row, 17).Value = vehicle.Taitrongtruc5;
+                                        worksheet.Cell(row, 18).Value = vehicle.Taitrongtruc6;
+                                        worksheet.Cell(row, 19).Value = vehicle.TLtruc3;
+                                        worksheet.Cell(row, 20).Value = vehicle.Quataitruc3;
+                                        worksheet.Cell(row, 21).Value = vehicle.Quataitong;
+                                        row++;
+                                    }
+                                    using (MemoryStream stream = new MemoryStream())
+                                    {
+                                        wb.SaveAs(stream);
+                                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"baocaocanxe_{DateTime.Now.ToString("yyMMddHHmmss")}.xlsx");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Createpdf(string id)
         {
             try
             {
@@ -165,15 +313,8 @@ namespace VVA.ITS.WebApp.Controllers
                     string kieuxe = check > 6 ? "Container" : "Xe thân liền";
                     int truc = clsHelps.gettrucxe(check);
                     string Sogplx = data.Sogplx;
-                    string stt = "xxx";
-                    string chedocan = "Động";
-                    if (Sogplx.Contains("#"))
-                    {
-                        string[] parts = Sogplx.Split('#');
-                        Sogplx = parts[0];
-                        stt = parts[1];
-                        chedocan = parts[1];
-                    }
+                    string stt = data.sttcan;
+                    string chedocan = data.chedocan;
                     string html = "";
                     if ( check<7)
                     {
@@ -206,36 +347,28 @@ namespace VVA.ITS.WebApp.Controllers
                                 </tr>";
                     }
                     string vipham = "";
-                    if (data.Quataitruc1.StartsWith("0") && data.Quataitruc2.StartsWith("0") && data.Quataitruc3.StartsWith("0") && data.Quataitong.StartsWith("0") && data.Quataitheogp.StartsWith("0"))
+                    if (data.Quataitruc1 <=0 && data.Quataitruc2 <= 0 && data.Quataitruc3 <= 0 && data.Quataitong <= 0 && data.Quataitheogp <= 0)
                     {
                         vipham += $@"<th>Không vi phạm</th>";
                     }
                     else
                     {
-                        if (!data.Quataitong.StartsWith("0"))
+                        if (data.Quataitong >0)
                         {
-                            vipham += $@"<th>Xe vượt tổng trọng lượng cho phép của cầu, đường: {data.Quataitong} %</th>";
+                            vipham += $@"<th>Xe vượt tổng trọng lượng cho phép của cầu, đường: {data.Quataitong.ToString("0.00")} %</th>";
                             vipham += $@"<br>";
                         
                         }
-                        if(!data.Quataitruc1.StartsWith("0") || !data.Quataitruc2.StartsWith("0") || !data.Quataitruc3.StartsWith("0"))
+                        double maxquatai = maxquatai = Math.Max(data.Quataitruc1, Math.Max(data.Quataitruc2, data.Quataitruc3));
+                        if (maxquatai > 0)
                         {
-                            string largestValue = data.Quataitruc1;
-                            if (data.Quataitruc2.CompareTo(largestValue) > 0)
-                            {
-                                largestValue = data.Quataitruc2;
-                            }
-
-                            if (data.Quataitruc3.CompareTo(largestValue) > 0)
-                            {
-                                largestValue = data.Quataitruc3;
-                            }
-                            vipham += $@"<th>Xe vượt tải trọng trục cho phép, đường: {largestValue} %</th>";
+                            vipham += $@"<th>Xe vượt tải trọng trục cho phép, đường: {maxquatai.ToString("0.00")} %</th>";
                             vipham += $@"<br>";
                         }
-                        if (!data.Quataitheogp.StartsWith("0"))
+                       
+                        if (data.Quataitheogp>0)
                         {
-                            vipham += $@"<th>Xe vượt khối lượng hàng CC CPTGGT: {data.Quataitheogp}</th>";
+                            vipham += $@"<th>Xe vượt khối lượng hàng CC CPTGGT: {data.Quataitheogp.ToString("0.00")} %</th>";
                             vipham += $@"<br>";
                         }
                     }
@@ -966,7 +1099,7 @@ namespace VVA.ITS.WebApp.Controllers
                                                             <tr>
                                                                 <td style=""color: red;"">SỞ GIAO THÔNG VẬN TẢI HỒ CHÍ MINH</td>
                                                                 <td>Lý trình</td>
-                                                                <td>Lần cân:1</td>
+                                                                <td>Lần cân</td>
                                                               </tr>
                                                               <tr>
                                                                 <td style=""color: red;"">Trạm CĐ 005 HCM</td>
@@ -1008,9 +1141,9 @@ namespace VVA.ITS.WebApp.Controllers
                                                                 <td colspan=""4"" style=""text-align: center;""><strong>THÔNG TIN KHỐI LƯỢNG VÀ KÍCH THƯỚC CHO PHÉP CỦA XE</strong></td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Khối lượng bản thân của ô tô [tấn]:{data.Taitrongdaukeo}</td>
+                                                                <td>Khối lượng bản thân của ô tô [tấn]:{clsHelps.KilogramsToTons(data.Taitrongdaukeo)}</td>
                                                                 <td></td>
-                                                                <td>Khối lượng bản thân của SMRM/RM [tấn]:{data.Taitrongromoc}</td>
+                                                                <td>Khối lượng bản thân của SMRM/RM [tấn]:{clsHelps.KilogramsToTons(data.Taitrongromoc)}</td>
                                                                 <td></td>
                                                             </tr>
                                                             <tr>
@@ -1019,7 +1152,7 @@ namespace VVA.ITS.WebApp.Controllers
                                                             </tr>
                                                             <tr>
                                                                 <td>Khối lượng HHCC cho phép TGGT của ô tô/SMRM/RM [tấn]:</td>
-                                                                <td colspan=""3"">{data.Taitrongchophep}</td>
+                                                                <td colspan=""3"">{clsHelps.KilogramsToTons(data.Taitrongchophep)}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Loại xe</td>

@@ -71,7 +71,7 @@ namespace VVA.ITS.WebApp.Controllers
 					// Password is correct, sign out the previous session then sign in
 					await this.signInManager.SignOutAsync();
 					var result = await this.signInManager.PasswordSignInAsync(user, loginVM.password, false, false);
-					if (result.Succeeded) return RedirectToAction("Index", "Dashboard"); //return Redirect(loginVM.returnUrl ?? "/");
+					if (result.Succeeded) return RedirectToAction("Thongke", "Dashboard"); //return Redirect(loginVM.returnUrl ?? "/");
 				}
 				// Password is incorrect
 				TempData["Error"] = "Thông tin đăng nhập không chính xác. Vui lòng thử lại!";

@@ -137,6 +137,14 @@
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
+      "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\exel\\baocaocanxe.xlsx",
+      "PackagePath": "staticwebassets\\exel\\baocaocanxe.xlsx"
+    },
+    {
+      "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\exel\\phieucanxe.xlsx",
+      "PackagePath": "staticwebassets\\exel\\phieucanxe.xlsx"
+    },
+    {
       "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\exel\\xevipham.xlsx",
       "PackagePath": "staticwebassets\\exel\\xevipham.xlsx"
     },
@@ -167,6 +175,14 @@
     {
       "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\img\\202404160613022491205.jpg202404160613023041205evidence.jpg",
       "PackagePath": "staticwebassets\\img\\202404160613022491205.jpg202404160613023041205evidence.jpg"
+    },
+    {
+      "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\img\\20240729000117811.jpg",
+      "PackagePath": "staticwebassets\\img\\20240729000117811.jpg"
+    },
+    {
+      "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\img\\20240729000151614.jpg",
+      "PackagePath": "staticwebassets\\img\\20240729000151614.jpg"
     },
     {
       "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\img\\3.png",
@@ -311,6 +327,14 @@
     {
       "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\js\\dashboard\\dashboardSignalR.js",
       "PackagePath": "staticwebassets\\js\\dashboard\\dashboardSignalR.js"
+    },
+    {
+      "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\js\\dashboard\\dashboardfind.js",
+      "PackagePath": "staticwebassets\\js\\dashboard\\dashboardfind.js"
+    },
+    {
+      "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\js\\dashboard\\thongke.js",
+      "PackagePath": "staticwebassets\\js\\dashboard\\thongke.js"
     },
     {
       "Id": "D:\\VVA_Program\\VVA.ITS.WebApp.v17\\VVA.ITS.WebApp.v16\\wwwroot\\js\\dashboard\\weigh.js",

@@ -6,7 +6,7 @@ namespace VVA.ITS.WebApp.Interfaces
     {
         Task<IEnumerable<DataXe>> GetAllDataXe();
         Task<List<DataXe>> SeachWeight(SeachVehicles seachVehicles);
-        Task<DataXe> SeachWeightById(int id);
+        Task<DataXe> SeachWeightById(string id);
         Task<bool> Update(DataXe dataXe);
         
     }

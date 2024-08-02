@@ -107,37 +107,34 @@ try {
 
 function ShowNewVehiclesToPage(vehicles) {
     $("#listVehicleDashboard tbody").empty();
-   // console.log("Danh sách các phần tử trong warnedVehicles:", warnedVehicles);
-    var tr;   
+   
+    var warnedVehicles = []; // Đảm bảo biến warnedVehicles đã được khai báo
+    
     $.each(vehicles, function (index, vehicle) {
-        //console.log(vehicle);
-        tr = $('<tr/>');
-        //console.log(vehicle.plate_Image);
+        
+        var tr = $('<tr id="xxx" value="' + vehicle.id + '"></tr>'); // Tạo thẻ <tr> mới
+
         var speed = vehicle.speed;
         if (speed > 54) {
-            if (warnedVehicles.indexOf(vehicle.id) === -1 ){
+            if (warnedVehicles.indexOf(vehicle.id) === -1) {
                 warnedVehicles.push(vehicle.id);
                 var warningAudio = document.getElementById('warningAudio');
                 if (warningAudio.paused) {
                     warningAudio.play();
-                   // console.log("đã phát rồi nha");
                 }
             }
             tr.css('background-color', 'red');
             if (speed < 60) {
-                vehicle.speed = vehicle.speed + " => Xe vi phạm tốc độ 5 - <10km/h";
-            }
-            if (speed >= 60 && speed < 70) {
-                vehicle.speed = vehicle.speed + " => Xe vi phạm tốc độ 10 - <20km/h";
-            }
-            if (speed >= 70 && speed < 80) {
-                vehicle.speed = vehicle.speed + " => Xe vi phạm tốc độ 20 - <35km/h";
-            }
-            if (speed >= 80) {
-                vehicle.speed = vehicle.speed + " => Xe vi phạm tốc độ >35km/h";
+                vehicle.speed += " => Xe vi phạm tốc độ 5 - <10km/h";
+            } else if (speed >= 60 && speed < 70) {
+                vehicle.speed += " => Xe vi phạm tốc độ 10 - <20km/h";
+            } else if (speed >= 70 && speed < 80) {
+                vehicle.speed += " => Xe vi phạm tốc độ 20 - <35km/h";
+            } else if (speed >= 80) {
+                vehicle.speed += " => Xe vi phạm tốc độ >35km/h";
             }
         } else if (speed > 40) {
-            vehicle.speed = vehicle.speed + " => Xe không vi phạm";
+            vehicle.speed += " => Xe không vi phạm";
             if (speed > 50) {
                 tr.css('background-color', 'yellow');
             }
@@ -145,14 +142,13 @@ function ShowNewVehiclesToPage(vehicles) {
             if (warnedVehicles.length > 50) {
                 warnedVehicles.splice(0, warnedVehicles.length); // Xóa hết phần tử
             }
-            vehicle.speed = vehicle.speed + " => Xe không vi phạm";
+            vehicle.speed += " => Xe không vi phạm";
             tr.css('text-align', 'center');
         }
-        //console.log(vehicle);
-        //tr.append('<td>${(index+1)}</td>');
+
         tr.append('<input type="hidden" value="' + vehicle.id + '"/>');
         tr.append('<td>' + vehicle.device + '</td>');
-        tr.append('<td>' + vehicle.time.replace("T"," ") + '</td>');
+        tr.append('<td>' + vehicle.time.replace("T", " ") + '</td>');
         tr.append('<td>' + vehicle.plate + '</td>');
         tr.append('<td>' + vehicle.type + '</td>');
         tr.append('<td>' + vehicle.plate_Color + '</td>');
@@ -161,17 +157,10 @@ function ShowNewVehiclesToPage(vehicles) {
         tr.append('<td>' + vehicle.vehicle_Type + '</td>');
         tr.append('<td>' + vehicle.vehicle_Color + '</td>');
         tr.append('<td>' + vehicle.vehicle_Brand + '</td>');
-
-        //tr.append('<td><img class="img-fluid img-thumbnail" src="data: image/png;base64, ' + vehicle.plate_Image + '" data-image="data:image/png; base64, ' + vehicle.plate_image + '" width="100" height="100"></td>');
         tr.append('<td><img class="img-fluid img-thumbnail" src="' + vehicle.plate_Image + '" width="100" height="100"></td>');
         tr.append('<td><img class="img-fluid img-thumbnail" src="' + vehicle.full_Image + '" width="100" height="100"></td>');
-        //tr.append('<td><img class="img-fluid img-thumbnail" src="data: image/png;base64, ' + vehicle.full_Image + '" data-image="data:image/png; base64, ' + vehicle.full_image + '" width="100" height="100"></td>');
-       
 
-
-
-        tr.append('<td id="xxx" value="' + vehicle.id + '"><i class="fas fa-eye"></i></a></td>');
-        //<a href="/Dashboard/GetVehicleDetailsById/' + vehicle.id + '">
-        $("#listVehicleDashboard").append(tr);
+        $("#listVehicleDashboard tbody").append(tr); // Thêm thẻ <tr> vào tbody
     });
 }
+

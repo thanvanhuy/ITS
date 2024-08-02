@@ -23,11 +23,13 @@ namespace VVA.ITS.WebApp.ViewModels
         public string? Vehicle_Brand { get; set; }
         public string? Plate_Image { get; set; }
         public string? Full_Image { get; set; }
+        public int? vipham { get; set; }
+        public int? trangthaixuly { get; set; }
 
         public void GetData(SpeedCAM vehicle)
         {
             this.Id = vehicle.Id;
-            this.Device  = "DT874";
+            this.Device  = vehicle.Device;
             this.Time = vehicle.Time;
             this.Plate = vehicle.Plate;
             this.Type = vehicle.Type;
@@ -47,6 +49,32 @@ namespace VVA.ITS.WebApp.ViewModels
             {
                 this.Full_Image = clsHelps.imagenotfound;
             }
+        }
+        public void GetData(Speed_CAM_NEW vehicle)
+        {
+            this.Id = vehicle.Id;
+            this.Device = vehicle.Device;
+            this.Time = vehicle.Time;
+            this.Plate = vehicle.Plate;
+            this.Type = vehicle.Type;
+            this.Speed = vehicle.Speed;
+            this.Direction = vehicle.Direction;
+            this.Plate_Color = vehicle.Plate_Color;
+            this.Vehicle_Type = vehicle.Vehicle_Type;
+            this.Vehicle_Color = vehicle.Vehicle_Color;
+            this.Vehicle_Brand = vehicle.Vehicle_Brand;
+            this.Plate_Image = clsHelps.GetRelativePath(vehicle.Plate_Image);
+            this.Full_Image = clsHelps.GetRelativePath(vehicle.Full_Image);
+            if (!System.IO.File.Exists(this.Plate_Image))
+            {
+                this.Plate_Image = clsHelps.imagenotfound;
+            }
+            if (!System.IO.File.Exists(this.Full_Image))
+            {
+                this.Full_Image = clsHelps.imagenotfound;
+            }
+            this.vipham = vehicle.vipham;
+            this.trangthaixuly = vehicle.trangthaixuly;
         }
     }
 }

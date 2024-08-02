@@ -1,0 +1,206 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "VVA ITS - Thống kê dữ liệu xe";
+}
+
+@section ExtraCSS {
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Biểu đồ thống kê xe vi phạm 7 ngày gần nhất</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    @*  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                    </button> *@
+                </div>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="chart">
+                    <canvas id="barChart1" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <table id="tablexevipham">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Số lượng xe máy</th>
+                                <th>Số lượng xe máy vi pham</th>
+                                <th>Số lượng oto</th>
+                                <th>Số lượng oto vi phạm</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Biểu đồ thống kê loại phương tiện qua trong 7 ngày</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                     @* <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                    </button> *@
+                </div>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="chart">
+                    <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <table id="tableloaixe">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Xe bus</th>
+                                <th>Xe car</th>
+                                <th>Xe motobike</th>
+                                <th>Xe chưa xác định</th>
+                                <th>Xe suv</th>
+                                <th>Xe truck</th>
+                                <th>Xe van</th>
+                                <th>Xe bicycle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- DONUT CHART-->
+    <div class="col-6">
+      
+        <div class="card card-success">
+            <div class="card-header">
+                <h3 class="card-title">Thống kê theo vị trí</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    @* <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button> *@
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                <div class="chart-table">
+                    <table id="tablevitri">
+                        <thead>
+                            <tr>
+                                <th>Vị trí</th>
+                                <th>Số lượng</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+    <div class="col-6">
+       
+        <div class="card card-success">
+            <div class="card-header">
+                <h3 class="card-title">Thống kê theo hãng xe</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    @* <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                    </button> *@
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="donutChart1" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                <div class="chart-table">
+                    <table id="tablehangxe">
+                        <thead>
+                            <tr>
+                                <th>Loại xe</th>
+                                <th>Số lượng</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+@section ExtraScripts {
+    <!-- Select2 -->
+    <script src="~/plugins/select2/js/select2.full.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/plugins/chart.js/Chart.min.js"></script>
+    <!-- Bootbox for showing alert -->
+    <script src="~/plugins/bootbox/bootbox.all.min.js"></script>
+    <script src="~/js/dashboard/thongke.js"></script>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; /* Khoảng cách giữa các chart và bảng */
+        }
+
+        .chart-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+}

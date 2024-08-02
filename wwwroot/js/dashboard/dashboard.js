@@ -1,4 +1,19 @@
-﻿
+﻿function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+}
+
+function updateTime() {
+    const now = new Date();
+    const formattedTime = formatDate(now);
+    document.getElementById('current-time').innerText = `Dữ liệu trực tuyến phương tiện ngày: ${formattedTime}`;
+}
 function toggleSpinner() {
     var spinner = document.getElementById("spinner");
     if (spinner.style.display === "none") {
@@ -18,52 +33,6 @@ function toggleSpinner() {
 //    //console.log('Giá trị mới của input:', inputValue); 
 //});
 // test es6
-
-document.getElementById('btnseach').addEventListener("click", function () {
-    var startDateValue = document.getElementById('startDate').value;
-    var endDateValue = document.getElementById('endDate').value;
-
-    // Check if the dates are not empty
-    if (!startDateValue || !endDateValue) {
-        console.error("Start date and end date are required.");
-        return;
-    }
-
-    var startDateParts = startDateValue.split(' ');
-    var endDateParts = endDateValue.split(' ');
-
-    // Check if date parts are in correct format
-    if (startDateParts.length < 2 || endDateParts.length < 2) {
-        console.error("Invalid date format.");
-        return;
-    }
-
-    var startDateFormatted = startDateParts[0].split('/').reverse().join('-') + ' ' + startDateParts[1];
-    var endDateFormatted = endDateParts[0].split('/').reverse().join('-') + ' ' + endDateParts[1];
-
-    var plate = document.getElementById('LicensePlate').value;
-    var vehicleType = parseInt(document.getElementById("vehicleType").value, 10);
-    var direction = parseInt(document.getElementById("direction").value, 10);
-    var speedSend = parseInt(document.getElementById("overWeight").value, 10);
-
-    // Validate integer inputs
-    if (isNaN(vehicleType) || isNaN(direction) || isNaN(speedSend)) {
-        console.error("Invalid numeric input.");
-        return;
-    }
-
-    var search = {
-        speedsend: speedSend,
-        directionsend: direction,
-        platesend: plate,
-        starttime: startDateFormatted,
-        endtime: endDateFormatted,
-        VehicleType: vehicleType
-    };
-
-    InvokeVehiclesseach(search);
-});
-
 
 
 //document.getElementById('startDate').addEventListener('change', function () {
@@ -117,44 +86,10 @@ document.getElementById('btnseach').addEventListener("click", function () {
 
 //document.getElementById("direction").addEventListener('change', directionerr);
 
-const exportdata = async () => {
-    var api = "/Dashboard/Generatexml";
-    var options = {
-        method: 'POST',
-    };
-
-    try {
-        
-        var response = await fetch(api, options);
-
-        if (response.ok) {
-           
-            var filename = "";
-            var disposition = response.headers.get('Content-Disposition');
-            if (disposition && disposition.indexOf('attachment') !== -1) {
-                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                var matches = filenameRegex.exec(disposition);
-                if (matches != null && matches[1]) {
-                    filename = matches[1].replace(/['"]/g, '');
-                }
-            }
-            var blob = await response.blob();
-
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-            window.URL.revokeObjectURL(link.href);
-        } else {
-            console.error('Failed to download file:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-};
 
 
-document.getElementById("btnExportData").addEventListener("click", exportdata);
+
+
 function generatePDF() {
     var id1 = document.getElementById("idxe").value;
 
@@ -182,35 +117,6 @@ function generatePDF() {
             link.download = 'violation_details.pdf';
             link.click();
             window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-function generatePDF1() {
-    var id1 = document.getElementById("idxe").value;
-
-
-    var options = {
-        method: 'POST',
-        processData: false,
-        contentType: false,
-    };
-    var api = "/Dashboard/GeneratePdf/" + id1;
-    
-    fetch(api, options)
-        .then(response => {
-            
-            if (!response.ok) {
-                throw new Error('Failed to generate PDF: ' + response.status);
-            }
-            return response.blob(); 
-        })
-        .then(blob => {
-            // Tạo một đường dẫn tới file PDF
-            var url = window.URL.createObjectURL(blob);
-            // Mở PDF trong một tab hoặc cửa sổ mới
-            window.open(url, '_blank');
         })
         .catch(error => {
             console.error('Error:', error);
@@ -340,149 +246,112 @@ async function fetchAsync3() {
     }
 }
 
-$(document).ready(async function () {
 
-    //Initialize Select2 Elements
-    $('.select2').select2();
+async function fetchAsync4() {
     try {
-        var dt = dt1 = dt2 = dt3 = 0;
-        var [dt, dt1, dt2, dt3] = await Promise.all([
-            fetchAsync(),
-            fetchAsync1(),
-            fetchAsync2(),
-            fetchAsync3()
-        ]);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+        const url = '/Dashboard/GetVehiclesType';
 
-    // ChartJS
-    var areaChartData = {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
        
-        labels: getRecentDays(),
-        datasets: [
-            {
-                label: 'Số lượng xe máy',
-                backgroundColor: 'rgba(60,141,188,0.9)',
-                borderColor: 'rgba(60,141,188,0.8)',
-                pointRadius: false,
-                pointColor: '#3b8bba',
-                pointStrokeColor: 'rgba(60,141,188,1)',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data: dt
-            },
-            {
-                label: 'Số lượng xe máy vi phạm',
-                backgroundColor: 'rgba(0, 255, 0, 1 )',
-                borderColor: 'rgba(60,141,188,0.8)',
-                pointRadius: false,
-                pointColor: '#3b8bba',
-                pointStrokeColor: 'rgba(60,141,188,1)',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data: dt1
-            },
-            {
-                label: 'Số lượng xe oto',
-                backgroundColor: 'rgba(102, 205, 170, 1 )',
-                borderColor: 'rgba(60,141,188,0.8)',
-                pointRadius: false,
-                pointColor: '#3b8bba',
-                pointStrokeColor: 'rgba(60,141,188,1)',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data: dt2
-            },
-            {
-                label: 'Số lượng xe oto vi phạm',
-                backgroundColor: 'rgba(175, 238, 238, 1)',
-                borderColor: 'rgba(60,141,188,0.8)',
-                pointRadius: false,
-                pointColor: '#3b8bba',
-                pointStrokeColor: 'rgba(60,141,188,1)',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data: dt3
-            },
-        ]
-    }
+       
+        var datachar1 = document.getElementById("databarChart2");
+        const recentDays = Array.from(new Set(data.map(item => item.date))).sort();
+        const vehicleTypes = Array.from(new Set(data.map(item => item.vehicleTypeCombined)));
 
-    var barChartCanvas = $('#barChart1').get(0).getContext('2d')
-    var barChartData = $.extend(true, {}, areaChartData)
-    var temp0 = areaChartData.datasets[0]
-    var temp1 = areaChartData.datasets[1]
-    var temp2 = areaChartData.datasets[2]
-    var temp3 = areaChartData.datasets[3]
-    barChartData.datasets[0] = temp0
-    barChartData.datasets[1] = temp1
-    barChartData.datasets[2] = temp2
-    barChartData.datasets[3] = temp3
+        // Initialize the result object
+        const result = vehicleTypes.reduce((acc, type) => {
+            acc[type] = recentDays.map(day => ({ Date: day, Count: 0 }));
+            return acc;
+        }, {});
 
-    var barChartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        datasetFill: false
-    }
-
-    new Chart(barChartCanvas, {
-        type: 'bar',
-        data: barChartData,
-        options: barChartOptions
-    })
-
-     //Handle click event on tr of table #listVehicleDashboard
-    $(document).on('click', '#xxx', function () {
-        var vehicleID = $(this).attr("value"); // Get the vehicle ID from the value attribute of the clicked element
-        //console.log(vehicleID);
-        var url = '/Dashboard/GetVehicleDetailsById/'+ vehicleID;
-        //var formData = new FormData();
-        //formData.append('vehicleID', vehicleID);
-        $.ajax({
-            type: 'get',
-            url: url,
-            //data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                if (response.responseCode == 0) {
-                    var result = JSON.parse(response.responseMessage);
-                    
-                    //console.log(result);
-                    var timeArray = result.Time.split("T");
-                    var speed = result.Speed;
-                    if (speed > 54) {
-                        $("#inputresut").val("Xe vi phạm tốc độ");
-                    } else {
-                        $("#inputresut").val("Xe không vi phạm tốc độ");
-                    }
-                    let date = new Date(timeArray[0]);
-                    $("#idxe").val(result.Id);
-                    $("#inputDate").val(date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear());
-                    $("#inputTime").val(timeArray[1]);
-                    $("#inputType").val(result.Type.localeCompare("-") == 0 ? "Chưa xác định" : result.Type);
-                    $("#inputPlate").val(result.Plate.localeCompare("No plate") == 0 ? "Chưa xác định" : result.Plate);
-                    //$("#inputPlateImage").html('<img class="img-fluid" src="data: image/png;base64, ' + result.Plate_Image + '" data-image="data:image/png; base64, ' + result.Plate_Image   + '" />');
-                    $("#inputPlateImage").html('<img class="img-fluid" loading="lazy" src="' + result.Plate_Image + '" />');
-                    $("#inputPlateColor").val(result.Plate_Color.localeCompare("-") == 0 ? "Chưa xác định" : result.Plate_Color);
-                    $("#inputSpeed").val(result.Speed);
-                    $("#inputDirection").val(result.Direction == "Away" ? "DT854" : "Chợ cái tàu hạ");
-                    $("#inputConfidence").val(result.Confidence.localeCompare("-") == 0 ? "Chưa xác định" : result.Confidence);
-                    $("#inputVehicleType").val(result.Vehicle_Type == "Motorbike" ? "Xe máy" : "Ô tô");
-                    $("#inputVehicleColor").val(result.Vehicle_Color.localeCompare("-") == 0 ? "Chưa xác định" : result.Vehicle_Color);
-                    $("#inputVehicleBrand").val(result.Vehicle_Brand.localeCompare("-") == 0 ? "Chưa xác định" : result.Vehicle_Brand);
-                    $("#inputFullImage").html('<img class="img-fluid" loading="lazy" src="' + result.Full_Image + '" />');
-                    //$("#inputFullImage").html('<img class="img-fluid" src="data: image/png;base64, ' + result.Full_Image + '" data-image="data:image/png; base64, ' + result.Full_Image + '" />');
-                    $("#modalVehicleDetail").modal('show'); // Show modal after populating data
-                } else {
-                    bootbox.alert(response.ResponseMessage);
+        // Process the data to fill the result object
+        data.forEach(item => {
+            if (vehicleTypes.includes(item.vehicleTypeCombined)) {
+                const dayIndex = recentDays.indexOf(item.date);
+                if (dayIndex !== -1) {
+                    result[item.vehicleTypeCombined][dayIndex].Count = item.vehicleCount;
                 }
-            },
-            error: function (errorCallback) {
-                // Handle errors
-                bootbox.alert("Failed to get data!");
             }
         });
-    });
+
+        // Convert result object to arrays for each vehicle type
+        const arraysByVehicleType = vehicleTypes.map(type => {
+            return result[type].map(dayData => dayData.Count);
+        });
+
+        return {
+            recentDays,
+            vehicleTypes,
+            arraysByVehicleType
+        };
+    } catch (error) {
+        console.error("Error updating chart data:", error);
+    }
+}
+
+$(document).ready(async function () {
+    // Cập nhật thời gian ngay khi trang tải xong
+    updateTime();
+
+    // Cập nhật thời gian mỗi giây
+    setInterval(updateTime, 1000);
+     //Handle click event on tr of table #listVehicleDashboard
+    //$(document).on('click', '#xxx', function () {
+    //    var vehicleID = $(this).attr("value"); // Get the vehicle ID from the value attribute of the clicked element
+    //    //console.log(vehicleID);
+    //    var url = '/Dashboard/GetVehicleDetailsById/'+ vehicleID;
+    //    //var formData = new FormData();
+    //    //formData.append('vehicleID', vehicleID);
+    //    $.ajax({
+    //        type: 'get',
+    //        url: url,
+    //        //data: formData,
+    //        processData: false,
+    //        contentType: false,
+    //        success: function (response) {
+    //            if (response.responseCode == 0) {
+    //                var result = JSON.parse(response.responseMessage);
+                    
+    //                //console.log(result);
+    //                var timeArray = result.Time.split("T");
+    //                var speed = result.Speed;
+    //                if (speed > 54) {
+    //                    $("#inputresut").val("Vi phạm tốc độ");
+    //                } else {
+    //                    $("#inputresut").val("Không vi phạm");
+    //                }
+    //                let date = new Date(timeArray[0]);
+    //                $("#idxe").val(result.Id);
+    //                $("#inputDate").val(date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear());
+    //                $("#inputTime").val(timeArray[1]);
+    //                $("#inputType").val(result.Type.localeCompare("-") == 0 ? "Chưa xác định" : result.Type);
+    //                $("#inputPlate").val(result.Plate.localeCompare("No plate") == 0 ? "Chưa xác định" : result.Plate);
+    //                //$("#inputPlateImage").html('<img class="img-fluid" src="data: image/png;base64, ' + result.Plate_Image + '" data-image="data:image/png; base64, ' + result.Plate_Image   + '" />');
+    //                $("#inputPlateImage").html('<img class="img-fluid"  src="' + result.Plate_Image + '" />');
+    //                $("#inputPlateColor").val(result.Plate_Color.localeCompare("-") == 0 ? "Chưa xác định" : result.Plate_Color);
+    //                $("#inputSpeed").val(result.Speed);
+    //                $("#inputDirection").val(result.Direction == "Away" ? "DT854" : "Chợ cái tàu hạ");
+    //                $("#inputConfidence").val(result.Confidence.localeCompare("-") == 0 ? "Chưa xác định" : result.Confidence);
+    //                $("#inputVehicleType").val(result.Vehicle_Type == "Motorbike" ? "Xe máy" : "Ô tô");
+    //                $("#inputVehicleColor").val(result.Vehicle_Color.localeCompare("-") == 0 ? "Chưa xác định" : result.Vehicle_Color);
+    //                $("#inputVehicleBrand").val(result.Vehicle_Brand.localeCompare("-") == 0 ? "Chưa xác định" : result.Vehicle_Brand);
+    //                $("#inputFullImage").html('<img class="img-fluid" src="' + result.Full_Image + '" />');
+    //                //$("#inputFullImage").html('<img class="img-fluid" src="data: image/png;base64, ' + result.Full_Image + '" data-image="data:image/png; base64, ' + result.Full_Image + '" />');
+    //                /*$("#modalVehicleDetail").modal('show'); */// Show modal after populating data
+    //            } else {
+    //                bootbox.alert(response.ResponseMessage);
+    //            }
+    //        },
+    //        error: function (errorCallback) {
+    //            // Handle errors
+    //            bootbox.alert("Failed to get data!");
+    //        }
+    //    });
+    //});
 });
 

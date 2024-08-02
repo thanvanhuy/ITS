@@ -10,8 +10,10 @@ namespace VVA.ITS.WebApp.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options) { }
         public DbSet<AppUser> users { get; set; }
         public DbSet<IdentityRole> roles { get; set; }
-        public DbSet<SpeedCAM> Speed_CAM { get; set; }
-        public DbSet<DataXe> tbl_Data_Xe { get; set; }
+        public DbSet<SpeedCAM> Speed_CAM { get; set; }// socket
+        public DbSet<Speed_CAM_NEW> Speed_CAM_NEW { get; set; } //seach
+        public DbSet<DataXe> tbl_Data_Xe { get; set; }// cân
+        public DbSet<LogSystem> LogSystem { get; set; }// log của xe 
 
     }
 }

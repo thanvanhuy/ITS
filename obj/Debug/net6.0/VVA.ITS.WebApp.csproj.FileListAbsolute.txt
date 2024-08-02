@@ -689,6 +689,7 @@ D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Humanizer.
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.CodeAnalysis.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.CodeAnalysis.VisualBasic.dll
@@ -723,6 +724,7 @@ D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Mono.TextTemplating.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\RBush.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\SixLabors.Fonts.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\SkiaSharp.dll
@@ -773,6 +775,9 @@ D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\System.Thr
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\System.Web.Services.Description.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\System.Windows.Extensions.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\WkHtmlToPdf.dll
+D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\X.PagedList.dll
+D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\X.PagedList.Mvc.Common.dll
+D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\X.PagedList.Mvc.Core.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\cs\Microsoft.CodeAnalysis.resources.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\de\Microsoft.CodeAnalysis.resources.dll
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\bin\Debug\net6.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -887,6 +892,7 @@ D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\obj\Debug\net6.0\VVA.ITS.We
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\obj\Debug\net6.0\VVA.ITS.WebApp.MvcApplicationPartsAssemblyInfo.cache
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\obj\Debug\net6.0\VVA.ITS.WebApp.RazorAssemblyInfo.cache
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\obj\Debug\net6.0\VVA.ITS.WebApp.RazorAssemblyInfo.cs
+D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\obj\Debug\net6.0\VVA.ITS.WebApp.sourcelink.json
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\obj\Debug\net6.0\staticwebassets.build.json
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\obj\Debug\net6.0\staticwebassets.development.json
 D:\VVA_Program\VVA.ITS.WebApp.v17\VVA.ITS.WebApp.v16\obj\Debug\net6.0\staticwebassets\msbuild.VVA.ITS.WebApp.Microsoft.AspNetCore.StaticWebAssets.props

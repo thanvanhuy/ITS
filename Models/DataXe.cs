@@ -2,7 +2,7 @@
 {
     public class DataXe
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Biensotruoc { get; set; }
         public string Biensosau { get; set; }
         public DateTime Thoigian { get; set; }
@@ -25,7 +25,7 @@
         public int? KTthunghang_dai { get; set; }
         public int? KTthunghang_rong { get; set; }
         public int? KTthunghang_cao { get; set; }
-        public string Chieudaicoso { get; set; }
+        public string? Chieudaicoso { get; set; }
         public int? Taitrongtruc1 { get; set; }
         public int? Taitrongtruc2 { get; set; }
         public int? Taitrongtruc3 { get; set; }
@@ -42,14 +42,21 @@
         public int? TLtruc3 { get; set; }
         public int? TTLtruc { get; set; }
         public int? TLgiayphep { get; set; }
-        public string Quataitruc1 { get; set; }
-        public string Quataitruc2 { get; set; }
-        public string Quataitruc3 { get; set; }
-        public string Quataitong { get; set; }
-        public string Quataitheogp { get; set; }
-        public string Hinhtruoc { get; set; }
-        public string Hinhsau { get; set; }
+        public double Quataitruc1 { get; set; }
+        public double Quataitruc2 { get; set; }
+        public double Quataitruc3 { get; set; }
+        public double Quataitong { get; set; }
+        public double Quataitheogp { get; set; }
+        public string? Hinhtruoc { get; set; }
+        public string? Hinhsau { get; set; }
         public double? Tocdo { get; set; }
+        public string? sttcan { get; set; }
+        public string? chedocan { get; set; }
+        public int? sync { get; set; }
+        public int? IdUser { get; set; }
+        public string? Hinhtruoclocal { get; set; }
+        public string? Hinhsaulocal { get; set; }
+        public int? Loaixe { get; set; }
     }
 
 }

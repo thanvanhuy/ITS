@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using AppUtilObjectCore;
 using VVA.ITS.WebApp.Services.Helps;
 using ClosedXML.Excel;
+using System.Diagnostics;
+using X.PagedList;
 
 // Reference (AJAX ASP.NET core 6.0): https://www.c-sharpcorner.com/article/ajax-in-net-core/
 // Reference (ASP.NET with SignalR): https://learn.microsoft.com/en-us/aspnet/core/tutorials/signalr?view=aspnetcore-6.0&tabs=visual-studio
@@ -37,7 +39,43 @@ namespace VVA.ITS.WebApp.Controllers
             this.env = env;
             this._pdfService = pdfService;
         }
+        public IActionResult Thongke()
+        {
+            return View();
+        }
+        public IActionResult Maps()
+        {
+            return View();
+        }
+        public IActionResult Stream()
+        {
+//            cd "C:\Program Files\VideoLAN\VLC"
+//vlc - I dummy rtsp://Admin:1234@192.188.0.183:554/stream1 --sout "#transcode{vcodec=MJPG,vb=800,scale=Auto,acodec=none}:standard{access=http,mux=mpjpeg,dst=:8080/stream.mpjpeg}"
+//http://localhost:8080/stream.mpjpeg
+            // URL của camera RTSP
+            var rtspUrl = "rtsp://Admin:1234@192.188.0.183:554/stream3";
 
+            // Command line để sử dụng ffmpeg để phát video từ RTSP
+            var ffmpegArgs = $"-rtsp_transport tcp -i {rtspUrl} -c:v libx264 -preset veryfast -f mpegts -";
+
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "ffmpeg",
+                Arguments = ffmpegArgs,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            var process = new Process
+            {
+                StartInfo = processStartInfo
+            };
+
+            process.Start();
+
+            return new FileStreamResult(process.StandardOutput.BaseStream, "video/mpeg");
+        }
         //[Authorize]
         public async Task<IActionResult> Index()
         {
@@ -45,7 +83,7 @@ namespace VVA.ITS.WebApp.Controllers
             {
                 AppUser user = await userManager.GetUserAsync(HttpContext.User);
                 if (user == null) return RedirectToAction("Login", "Account");
-                var vehicles = await this.vehicleRepository.GetTopVehicles(50);
+                var vehicles = await this.vehicleRepository.GetTopVehicles(5,false);
                 List<VehicleDetailViewModel> vehicleVMs = new List<VehicleDetailViewModel>();
                 foreach (SpeedCAM vehicle in vehicles)
                 {
@@ -72,6 +110,102 @@ namespace VVA.ITS.WebApp.Controllers
             }
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> Indexfind(int page = 1, int pageSize = 10, int speedsend = 0, int directionsend = 0, int platecolor = 0, int vehiclecolor = 0, int vehiclebrand = 0, string platesend = "", string starttime = "", string endtime = "", int VehicleType = 0)
+        {
+            try
+            {
+                AppUser user = await userManager.GetUserAsync(HttpContext.User);
+                if (user == null) return RedirectToAction("Login", "Account");
+                if(platesend==null) { platesend=string.Empty; }
+                Seach search = new Seach
+                {
+                    speedsend = speedsend,
+                    directionsend = directionsend,
+                    platecolor = platecolor,
+                    vehiclecolor = vehiclecolor,
+                    vehiclebrand = vehiclebrand,
+                    platesend = platesend,
+                    starttime = starttime,
+                    endtime = endtime,
+                    VehicleType = VehicleType
+                };
+
+                List<VehicleDetailViewModel> vehicleVMs = new List<VehicleDetailViewModel>();
+
+                if (search.speedsend == 0 && search.directionsend == 0 && search.platecolor == 0 && search.vehiclecolor == 0 && search.vehiclebrand == 0 && string.IsNullOrEmpty(search.platesend) && search.starttime.Length==0)
+                {
+                    search = new Seach();
+                    var vehicles = await this.vehicleRepository.SeachAllVehicles(search);
+                    foreach (Speed_CAM_NEW vehicle in vehicles)
+                    {
+                        VehicleDetailViewModel vehicleVM = new VehicleDetailViewModel();
+                        vehicleVM.GetData(vehicle);
+                        vehicleVMs.Add(vehicleVM);
+                    }
+                }
+                else
+                {
+                    var vehicles = await this.vehicleRepository.SeachAllVehicles(search);
+                    foreach (Speed_CAM_NEW vehicle in vehicles)
+                    {
+                        VehicleDetailViewModel vehicleVM = new VehicleDetailViewModel();
+                        vehicleVM.GetData(vehicle);
+                        vehicleVMs.Add(vehicleVM);
+                    }
+                }
+
+                var pagedVehicles = vehicleVMs.ToPagedList(page, pageSize);
+
+                DashboardViewModel1 dashboardVM = new DashboardViewModel1
+                {
+                    Vehicles = pagedVehicles,
+                    Search = search,
+                };
+
+                return View(dashboardVM);
+            }
+            catch (Exception ex)
+            {
+                if (this.logger == null) this.logger = new Logger();
+                logger.Write("DashboardController.Indexfind", ex.Message, Logger.LogType.ERROR);
+            }
+            return View();
+        }
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> Indexfind([FromBody] Seach search)
+        //{
+        //    try
+        //    {
+        //        AppUser user = await userManager.GetUserAsync(HttpContext.User);
+        //        if (user == null) return RedirectToAction("Login", "Account");
+
+        //        var vehicles = await this.vehicleRepository.SeachAllVehicles(search);
+        //        List<VehicleDetailViewModel> vehicleVMs = vehicles.Select(vehicle =>
+        //        {
+        //            var vehicleVM = new VehicleDetailViewModel();
+        //            vehicleVM.GetData(vehicle);
+        //            return vehicleVM;
+        //        }).ToList();
+
+        //        var pagedVehicles = vehicleVMs.ToPagedList(1, 10);
+
+        //        var dashboardVM = new DashboardViewModel1
+        //        {
+        //            Vehicles = pagedVehicles
+        //        };
+        //        return Json(new { vehicles = dashboardVM.Vehicles, PageCount = pagedVehicles.PageCount });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        if (this.logger == null) this.logger = new Logger();
+        //        logger.Write("DashboardController.Indexfind", ex.Message, Logger.LogType.ERROR);
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
+
         //[HttpPost]
         //public async Task<JsonResult> GetVehicleDetailsById(IFormCollection formCollection)
         //{
@@ -116,8 +250,6 @@ namespace VVA.ITS.WebApp.Controllers
         //    }
         //    return null;
         //}
-
-
         [HttpGet]
         public async Task<JsonResult> GetVehicleDetailsById(int id)
         {
@@ -129,14 +261,14 @@ namespace VVA.ITS.WebApp.Controllers
                 {
                     vehicle.Plate_Image = clsHelps.GetRelativePath(vehicle.Plate_Image);
                     vehicle.Full_Image = clsHelps.GetRelativePath(vehicle.Full_Image);
-                    if (!System.IO.File.Exists(vehicle.Plate_Image))
-                    {
-                        vehicle.Plate_Image = clsHelps.imagenotfound;
-                    }
-                    if (!System.IO.File.Exists(vehicle.Full_Image))
-                    {
-                        vehicle.Full_Image = clsHelps.imagenotfound;
-                    }
+                    //if (!System.IO.File.Exists(vehicle.Plate_Image))
+                    //{
+                    //    vehicle.Plate_Image = clsHelps.imagenotfound;
+                    //}
+                    //if (!System.IO.File.Exists(vehicle.Full_Image))
+                    //{
+                    //    vehicle.Full_Image = clsHelps.imagenotfound;
+                    //}
                     //if (System.IO.File.Exists(vehicle.Plate_Image)) vehicle.Plate_Image = Utility.fileToBase64(vehicle.Plate_Image);
                     //else
                     //{
@@ -260,6 +392,26 @@ namespace VVA.ITS.WebApp.Controllers
             }
         }
         [HttpGet]
+        public async Task<IActionResult> GetVehiclesType()
+        {
+            try
+            {
+                var vehicles = await this.vehicleRepository.GetVehiclesType();
+                if (vehicles == null)
+                {
+                    return NotFound();
+                }
+                return Ok(vehicles); 
+            }
+            catch (Exception ex)
+            {
+               
+                logger.Write("DashboardController.GetVehiclesType()", ex.Message, Logger.LogType.ERROR);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetVehiclesoto()
         {
             try
@@ -352,14 +504,14 @@ namespace VVA.ITS.WebApp.Controllers
         {
             try
             {
-                var vehicles = await this.vehicleRepository.GetTopVehicles(50, false);
+                var vehicles = await this.vehicleRepository.GetTopVehicles(10, false);
                 string htmlTableData = string.Empty;
                 foreach (SpeedCAM vehicle in vehicles)
                 {
                     //vehicle.location = await this.locationRepository.GetLocation(vehicle.locationID);
                     htmlTableData += "<tr style='cursor:grab'>"
                                             + "<input type='hidden' value='" + vehicle.Id + "'/>"
-                                            + "<td>" + "DT841" + "</td>"
+                                            + "<td>" + vehicle.Device + "</td>"
                                             + "<td>" + vehicle.Time.ToString("dd/MM/yyyy HH:mm:ss") + "</td>"
                                             + "<td>" + vehicle.Plate + "</td>"
                                             + "<td>" + vehicle.Type + "</td>"
@@ -389,11 +541,11 @@ namespace VVA.ITS.WebApp.Controllers
             return null;
         }
         [HttpPost]
-        public async Task<IActionResult> Generatexml()
+        public async Task<IActionResult> Generatexml(Seach search)
         {
             try
             {
-                var vehicles = await this.vehicleRepository.GetVehiclesBySpeed(55, null);
+                var vehicles = await this.vehicleRepository.SeachAllVehicles(search);
                 int row = 5;
                 string filePath = Path.Combine(this.env.ContentRootPath, "wwwroot", "exel", "xevipham.xlsx");
 
@@ -413,8 +565,7 @@ namespace VVA.ITS.WebApp.Controllers
                                 worksheet.Cell($"C{row}").Value = vehicle.Plate;
                                 worksheet.Cell($"D{row}").Value = vehicle.Vehicle_Type?.ToString() == "Motorbike" ? "Xe máy" : "Ô tô";
                                 worksheet.Cell($"E{row}").Value = clsHelps.GetSpeed((int)vehicle.Speed);
-                                worksheet.Cell($"F{row}").Value = "Đang cập nhật";
-                                worksheet.Cell($"G{row}").Value = "Đang cập nhật";
+                               
                             }
 
                             using (MemoryStream stream = new MemoryStream())

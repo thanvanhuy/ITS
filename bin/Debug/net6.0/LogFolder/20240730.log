@@ -1,0 +1,2 @@
+30-07-2024  14:17:17.998 DashboardController.Indexfind() - Error: The conversion of a varchar data type to a datetime data type resulted in an out-of-range value.
+30-07-2024  14:18:01.557 DashboardController.Indexfind() - Error: The conversion of a varchar data type to a datetime data type resulted in an out-of-range value.

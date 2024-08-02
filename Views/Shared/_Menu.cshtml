@@ -1,47 +1,131 @@
 ﻿<nav class="mt-2">
-    <ul id="sidebarMenu" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <!-- Add icons to the links using the .nav-icon class
-             with font-awesome or any other icon font library -->
+    <ul id="sidebarMenu" class="nav nav-pills nav-sidebar flex-column text-light" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
         <li class="nav-item">
-            <a id="menuDashboard" asp-controller="Dashboard" asp-action="Index" class="nav-link">
-                <i class="fas fa-home"></i>
-                <p>
-                    Trang chủ
-                </p>
-            </a>
+            <button type="button" class="btn" style="margin-left: 30px;">
+                <a href="http://vva.com.vn">
+                    <img src="~/img/VVA_LOGO.gif" alt="Viet Vision Automation" class="brand-image img-circle elevation-3" style="opacity: .8;">
+                    <span class="brand-text font-weight-light">Vision ITS</span>
+                </a>
+            </button>
         </li>
-        <li class="nav-item">
-            <a id="Canxe" asp-controller="Live" asp-action="Index" class="nav-link">
-                <i class="fas fa-weight"></i>
-                <p>Cân xe</p>
-            </a>
+        <li class="nav-item border border-primary">
+            <button type="button" class="btn">
+                <a id="menuDashboard" asp-controller="Dashboard" asp-action="Thongke" class="nav-link">
+                    <span class="icon-text-container">
+                        <i class="fas fa-home"></i>
+                        <span>ITS Dashboard</span>
+                    </span>
+                </a>
+            </button>
         </li>
-        @if (User.Identity.Name == "Admin")
+        <li class="nav-item border border-primary">
+            <button type="button" class="btn">
+                <a id="menuLiveData" asp-controller="Dashboard" asp-action="Index" class="nav-link">
+                    <span class="icon-text-container">
+                        <i class="fas fa-weight"></i>
+                        <span>Dữ liệu trực tuyến</span>
+                    </span>
+                </a>
+            </button>
+        </li>
+        <li class="nav-item border border-primary">
+            <button type="button" class="btn">
+                <a id="menuLiveData"
+                   href="@Url.Action("Indexfind", "Dashboard", new { page = 1, pageSize = 10, speedsend = 0, directionsend = 0, platecolor = 0, vehiclecolor = 0, vehiclebrand = 0, platesend = "", starttime = "", endtime = "", VehicleType = 0 })"
+                   class="nav-link">
+                    <span class="icon-text-container">
+                        <i class="fas fa-weight"></i>
+                        <span>Tra cứu phương tiện</span>
+                    </span>
+                </a>
+            </button>
+        </li>
+        @if (User.Identity.Name != "svtt")
         {
-            <li class="nav-item">
-                <a id="menuRegisterUser" asp-controller="Account" asp-action="Register" class="nav-link">
-                    <i class="fa fa-user-plus" style="color:green"></i>
-                    <p>Thêm mới người dùng</p>
-                </a>
+            <li class="nav-item border border-primary">
+                <button type="button" class="btn">
+                    <a id="menuLiveData" asp-controller="Dashboard" asp-action="Maps" class="nav-link">
+                        <span class="icon-text-container">
+                            <i class="fas fa-weight"></i>
+                            <span>Bản đồ số GIS Maps</span>
+                        </span>
+                    </a>
+                </button>
             </li>
-            <li class="nav-item">
-                <a id="menuDeleteUser" asp-controller="Account" asp-action="Index" class="nav-link">
-                    <i class="fas fa-user-times" style="color:red"></i>
-                    <p>Xóa bỏ người dùng</p>
-                </a>
+            <li class="nav-item border border-primary">
+                <button type="button" class="btn">
+                    <a id="menuLiveData" asp-controller="Live" asp-action="Index" class="nav-link">
+                        <span class="icon-text-container">
+                            <i class="fas fa-weight"></i>
+                            <span>Dữ liệu cân động</span>
+                        </span>
+                    </a>
+                </button>
             </li>
-            <li class="nav-item">
-                <a id="menuListRole" asp-controller="Role" asp-action="Index" class="nav-link">
-                    <i class="fa fa-hospital-user" style="color:yellow"></i>
-                    <p>Danh sách phân quyền</p>
-                </a>
+            <li class="nav-item border border-primary">
+                <button type="button" class="btn">
+                    <a id="menuLiveData" class="nav-link">
+                        <span class="icon-text-container">
+                            <i class="fas fa-weight"></i>
+                            <span>Thống kê cân động</span>
+                        </span>
+                    </a>
+                </button>
             </li>
         }
-        <li class="nav-item">
-            <a id="Account" asp-controller="Account" asp-action="Logout" class="nav-link">
-                <i class="far fa-arrow-alt-circle-right"></i>
-                <p>Đăng xuất</p>
-            </a>
+        @if (User.Identity.Name == "Admin")
+        {
+            <li class="nav-item border border-primary">
+                <button type="button" class="btn">
+                    <a id="menuRegisterUser" asp-controller="Account" asp-action="Register" class="nav-link">
+                        <span class="icon-text-container">
+                            <i class="fa fa-user-plus" style="color: green;"></i>
+                            <span>Thêm mới người dùng</span>
+                        </span>
+                    </a>
+                </button>
+            </li>
+            <li class="nav-item border border-primary">
+                <button type="button" class="btn">
+                    <a id="menuDeleteUser" asp-controller="Account" asp-action="Index" class="nav-link">
+                        <span class="icon-text-container">
+                            <i class="fas fa-user-times" style="color: red;"></i>
+                            <span>Xóa bỏ người dùng</span>
+                        </span>
+                    </a>
+                </button>
+            </li>
+            <li class="nav-item border border-primary">
+                <button type="button" class="btn">
+                    <a id="menuListRole" asp-controller="Role" asp-action="Index" class="nav-link">
+                        <span class="icon-text-container">
+                            <i class="fa fa-hospital-user" style="color: yellow;"></i>
+                            <span>Danh sách phân quyền</span>
+                        </span>
+                    </a>
+                </button>
+            </li>
+        }
+        <li class="nav-item border border-primary">
+            <button type="button" class="btn">
+                <a id="menuDashboard" asp-controller="Account" asp-action="Logout" class="nav-link">
+                    <span class="icon-text-container">
+                        <i class="fas fa-arrow-alt-circle-right"></i>
+                        <span>Đăng xuất</span>
+                    </span>
+                </a>
+            </button>
         </li>
     </ul>
 </nav>
+<style>
+    .icon-text-container {
+        display: flex;
+        align-items: center; /* Align items vertically */
+    }
+
+        .icon-text-container i {
+            margin-right: 12px; /* Adjust the space between the icon and text */
+        }
+</style>
